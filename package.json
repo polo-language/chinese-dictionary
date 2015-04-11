@@ -1,0 +1,17 @@
+{
+  "name": "chinese-dictionary",
+  "version": "0.0.1",
+  "description": "Chinese dictionary: traditional, simplified, and English served in an Angular web app.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Angelo Polo <polo.language@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.12.3",
+    "jade": "^1.9.2",
+    "mongoose": "^4.0.1"
+  }
+}
