@@ -1,7 +1,14 @@
 doctype html
 html(lang="en")
     head
-        title Chinese dictionary
+        title Chinese Dictionary
+        link(rel="stylesheet" href="/vendor/bootstrap/dist/css/bootstrap.min.css")
+        script(src="/vendor/angular/angular.js")
 
-    body
-        h1 Oh boy, we're online...
+    body(ng-app="ngApp")
+        .container
+            h1 Chinese Dictionary
+            ul.list-group(ng-controller="EntryCtrl")
+                li.list-group-item(ng-repeat="entry in entries")
+                    | {{entry.trad}}: {{entry.english[0]}}
+                    // change to .row and then .col-md-XX for each language

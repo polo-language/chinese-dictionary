@@ -1,1 +1,3 @@
 node_modules/
+res/dict-json/*
+client/vendor/
