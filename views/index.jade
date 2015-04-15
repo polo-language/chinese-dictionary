@@ -9,7 +9,10 @@ html(lang="en")
     body(ng-app="ngApp")
         .container
             h1 Chinese Dictionary
+
             ul.list-group(ng-controller="EntryCtrl")
                 li.list-group-item(ng-repeat="(trad, entry) in entries")
-                    | {{trad}}: {{entry.english[0]}}
-                    // change to .row and then .col-md-XX for each language
+                    .row
+                        .col-md-4 {{trad}}
+                        .col-md-4 {{entry.pinyin}}
+                        .col-md-4 {{entry.english[0]}}
