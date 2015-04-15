@@ -13,7 +13,7 @@ app.factory("DictionarySvc", function($q, $http) {
 })
 
 app.controller('EntryCtrl', function ($scope, DictionarySvc) {
-  DictionarySvc.getEntries().then(function (entries) {
+  DictionarySvc.getEntries(10).then(function (entries) {
     $scope.entries = entries
   })
 })
