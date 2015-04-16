@@ -3,6 +3,7 @@ html(lang="en")
     head
         title Chinese Dictionary
         link(rel="stylesheet" href="/vendor/bootstrap/dist/css/bootstrap.min.css")
+        link(rel="stylesheet" href="/css/app.css")
         script(src="/vendor/angular/angular.js")
         script(src="/js/app.js")
 
@@ -10,9 +11,33 @@ html(lang="en")
         .container
             h1 Chinese Dictionary
 
-            ul.list-group(ng-controller="EntryCtrl")
-                li.list-group-item(ng-repeat="(trad, entry) in entries")
-                    .row
-                        .col-md-4 {{trad}}
-                        .col-md-4 {{entry.pinyin}}
-                        .col-md-4 {{entry.english[0]}}
+            div(ng-controller="EntryCtrl")
+
+                .input-group.entry-input
+                    span.input-group-addon Number of entries
+                    input.form-control(type="text" ng-model="count")
+                    span.input-group-btn
+                        button.btn.btn-default(type="button" ng-click="refreshEntries()") Refresh
+
+                .input-group.entry-input
+                    span.input-group-addon Search English
+                    input.form-control(type="text" ng-model="searchEnglish")
+                    span.input-group-btn
+                        button.btn.btn-default(type="button" ng-click="" disabled) Search
+                
+                
+
+                ul.list-group
+                    li.list-group-item.list-group-item-info
+                        .row
+                            .col-md-2 Traditional
+                            .col-md-2 Simplified
+                            .col-md-4 PinYin
+                            .col-md-4 English
+
+                    li.list-group-item(ng-repeat="(trad, entry) in entries")
+                        .row
+                            .col-md-2 {{trad}}
+                            .col-md-2 {{entry.simp}}
+                            .col-md-4 {{entry.pinyin}}
+                            .col-md-4 {{entry.english[0]}}

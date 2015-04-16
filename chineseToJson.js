@@ -1,9 +1,9 @@
 // Requires manual removal of final comma
 var fs = require('fs')
   , readline = require('readline')
-  , inFilePath = './res/cedict_1_0_ts_utf-8_mdbg.txt'
+  , inFilePath = './res/CC-CEDICT/cedict_1_0_ts_utf-8_mdbg.txt'
   , rl = readline.createInterface(fs.createReadStream(inFilePath), console.log)
-  , outFilePath = '../test/out_01.json'
+  , outFilePath = './res/dict-json/dict_all.json'
   , json = '{\n'
 
 rl.on('line', function (line) {

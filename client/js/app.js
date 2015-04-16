@@ -13,11 +13,12 @@ app.factory("DictionarySvc", function($q, $http) {
 })
 
 app.controller('EntryCtrl', function ($scope, DictionarySvc) {
-  function refreshEntries(count) {
-    DictionarySvc.getEntries(count).then(function (entries) {
+  $scope.count = 5
+  $scope.refreshEntries = function () {
+    console.log('count: ' + $scope.count)
+    DictionarySvc.getEntries($scope.count).then(function (entries) {
       $scope.entries = entries
     })
   }
-  refreshEntries(5)
-
+  $scope.refreshEntries()
 })
