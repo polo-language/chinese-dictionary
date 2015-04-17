@@ -14,22 +14,26 @@ app.get('/', function (req, res) {
 
 app.get('/api/entries/:count', function (req, res) {
   var count = req.params.count
-    , n = 0
-    , entries = {}
   if (count < 1) {
     count = 1
   } else if (10000 < count) {
     count = 10000
   }
-  for (var key in dict) {
-    ++n
-    if (n > count) { break; }
-    entries[key] = dict[key]
-  }
-  res.send(entries)
+  res.send(randomKeys(dict, count))
 })
 
 //app.listen(process.env.PORT)
 var server = app.listen(process.env.PORT, function () {
   console.log('listening on http://localhost:%s', server.address().port)
 })
+
+function randomKeys(obj, count) {
+  var keys = Object.keys(obj)
+    , selected = {}
+    , key
+  for (var i = 0; i < count; ++i) {
+    key = keys[Math.floor(keys.length * Math.random())]
+    selected[key] = obj[key]
+  }
+  return selected
+}
