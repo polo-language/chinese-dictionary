@@ -23,7 +23,7 @@ html(lang="en")
                     span.input-group-addon Search English
                     input.form-control(type="text" ng-model="englishTerm")
                     span.input-group-btn
-                        button.btn.btn-default(type="button" ng-click="") Search
+                        button.btn.btn-default(type="button" ng-click="searchEnglish()") Search
                 
                 
 
@@ -35,9 +35,9 @@ html(lang="en")
                             .col-md-4 Pinyin
                             .col-md-4 English
 
-                    li.list-group-item(ng-repeat="(trad, entry) in entries")
+                    li.list-group-item(ng-repeat="entry in entries")
                         .row
-                            .col-md-2 {{trad}}
+                            .col-md-2 {{entry.trad}}
                             .col-md-2 {{entry.simp}}
                             .col-md-4 {{entry.pinyin}}
                             .col-md-4 {{entry.english[0]}}

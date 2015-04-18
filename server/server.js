@@ -1,6 +1,5 @@
 var express = require('express')
   , mongoose = require('mongoose')
-  // , models = require('../models/dictionaryModel')
   , routes = require('./routes')
   , app = express()
 

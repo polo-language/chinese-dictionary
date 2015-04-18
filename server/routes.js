@@ -1,6 +1,7 @@
 var express = require('express')
   , fs = require('fs')
   , path = require('path')
+  , DictEntry = require('../models/dictionaryModel').DictEntry
   , dictPath = './res/dict-json/dict_all.json'
   , dict = JSON.parse(fs.readFileSync(dictPath, { encoding: 'utf8' }))
 
@@ -18,18 +19,36 @@ function addRoutes(app) {
   })
 
   app.get('/api/random/:count', function (req, res) {
+    // TODO: currently gets first count entries.
+    //       Rewrite to get count _random_ entries.
     var count = req.params.count
     if (count < 1) {
       count = 1
     } else if (10000 < count) {
       count = 10000
     }
-    res.send(randomKeys(dict, count))
+    
+    DictEntry.find({})
+             .limit(count)
+             .exec(sendResults)
+
+    function sendResults(err, result) {
+      if (err) {
+        res.sendStatus(204)
+      }
+      res.send(result)
+    }
   })
 
-  // app.get('/api/search/en/:term', function (req, res) {
-  //   // TODO
-  // })
+  app.get('/api/search/en/:term', function (req, res) {
+    // TODO: change 'en' to ':lang' and use a switch or pass to generic searchLang func in model
+    DictEntry.searchEnglish(req.params.term, function (err, result) {
+      if (err) {
+        res.sendStatus(204)
+      }
+      res.send(result)
+    })
+  })
 }
 
 //// functions
