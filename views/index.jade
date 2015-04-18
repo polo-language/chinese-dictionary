@@ -14,16 +14,16 @@ html(lang="en")
             div(ng-controller="EntryCtrl")
 
                 .input-group.entry-input
-                    span.input-group-addon Number of entries
+                    span.input-group-addon Random entries
                     input.form-control(type="text" ng-model="count")
                     span.input-group-btn
                         button.btn.btn-default(type="button" ng-click="refreshEntries()") Refresh
 
                 .input-group.entry-input
                     span.input-group-addon Search English
-                    input.form-control(type="text" ng-model="searchEnglish")
+                    input.form-control(type="text" ng-model="englishTerm")
                     span.input-group-btn
-                        button.btn.btn-default(type="button" ng-click="" disabled) Search
+                        button.btn.btn-default(type="button" ng-click="") Search
                 
                 
 

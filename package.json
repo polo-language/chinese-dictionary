@@ -2,10 +2,10 @@
   "name": "chinese-dictionary",
   "version": "0.0.1",
   "description": "Chinese dictionary: traditional, simplified, and English served in an Angular web app. Uses CC-CEDICT data.",
-  "main": "server.js",
+  "main": "./server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "PORT=3030 CONN=mongodb://localhost/chinese-dictionary node server/server"
   },
   "author": "Angelo Polo <polo.language@gmail.com>",
   "license": "MIT",

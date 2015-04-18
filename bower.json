@@ -6,7 +6,7 @@
     "Angelo Polo <polo.language@gmail.com>"
   ],
   "description": "Chinese dictionary: traditional, simplified, and English served in an Angular web app. Uses CC-CEDICT data.",
-  "main": "server.js",
+  "main": "./server/server.js",
   "moduleType": [
     "node"
   ],
