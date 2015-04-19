@@ -28,7 +28,7 @@ app.factory('DictionarySvc', function($q, $http) {
 })
 
 app.controller('EntryCtrl', function ($scope, DictionarySvc) {
-  $scope.count = 5
+  $scope.numRandom = 5
   $scope.englishTerm = ''
   $scope.chineseTerm = ''
   $scope.pinyinTerm = ''
@@ -37,22 +37,25 @@ app.controller('EntryCtrl', function ($scope, DictionarySvc) {
     $scope.englishTerm = ''
     $scope.chineseTerm = ''
     $scope.pinyinTerm = ''
-    DictionarySvc.getRandomEntries($scope.count).then(saveToEntries)
+    DictionarySvc.getRandomEntries($scope.numRandom).then(saveToEntries)
   }
 
   $scope.searchEnglish = function () {
+    $scope.numRandom = ''
     $scope.chineseTerm = ''
     $scope.pinyinTerm = ''
     DictionarySvc.searchEnglish($scope.englishTerm).then(saveToEntries)
   }
 
   $scope.searchChinese = function () {
+    $scope.numRandom = ''
     $scope.englishTerm = ''
     $scope.pinyinTerm = ''
     DictionarySvc.searchChinese($scope.chineseTerm).then(saveToEntries)
   }
 
   $scope.searchPinyin = function () {
+    $scope.numRandom = ''
     $scope.englishTerm = ''
     $scope.chineseTerm = ''
     DictionarySvc.searchPinyin($scope.pinyinTerm).then(saveToEntries)

@@ -10,6 +10,7 @@
   "author": "Angelo Polo <polo.language@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "async-each": "^0.1.6",
     "express": "^4.12.3",
     "jade": "^1.9.2",
     "mongodb": "^2.0.27",

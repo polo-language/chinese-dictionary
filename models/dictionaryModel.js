@@ -1,17 +1,44 @@
 var mongoose = require('mongoose')
+  , each = require('async-each')
   , collectionName = 'DictEntries'
-  , dictSchema = new mongoose.Schema({
-      trad: String,
-      simp: String,
-      pinyin: String,
-      english: [String],
+  , dictSchema = new mongoose.Schema(
+    { key: Number 
+    , trad: String
+    , simp: String
+    , pinyin: String
+    , english: [String]
     })
 
+dictSchema.statics.getRandom = getRandom
 dictSchema.statics.searchEnglish = searchEnglish
 dictSchema.statics.searchChinese = searchChinese
 dictSchema.statics.searchPinyin = searchPinyin
 
 //// Function defs
+function getRandom(count, cb) {
+  var that = this
+  this.find().count(function (err, total) {
+    var keys = getRandomKeys(total)
+    each(keys, findOneByKey, cb)
+    // for (var i = 0; i < keys.length; ++i) {
+    //   findOne(keys[i])
+    //   // TODO
+    // }
+  })
+
+  function findOneByKey(oneKey, eachCallback) {
+    that.findOne({ key: oneKey }, eachCallback)
+  }
+
+  function getRandomKeys(total) {
+    var keys = []
+    for (var i = 0; i < count; ++i) {
+      keys.push(Math.floor(total * Math.random()))
+    }
+    return keys
+  }
+}
+
 function searchEnglish(term, cb) {
   var reg = new RegExp(escapeRegExp(term), 'i')
   this.find({ english: reg })

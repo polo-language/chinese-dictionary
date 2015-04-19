@@ -31,10 +31,10 @@ function getRandom(req, res, next) {
     count = 10000
   }
 
-  // TODO: DictEntry.getRandom(count, done)
-  DictEntry.find({})
-           .limit(count)
-           .exec(done)
+  DictEntry.getRandom(count, done)
+  // DictEntry.find({})
+  //          .limit(count)
+  //          .exec(done)
 }
 
 function getLangTerm(req, res, next) {
