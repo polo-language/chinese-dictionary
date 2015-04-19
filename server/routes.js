@@ -40,14 +40,30 @@ function addRoutes(app) {
     }
   })
 
-  app.get('/api/search/en/:term', function (req, res) {
-    // TODO: change 'en' to ':lang' and use a switch or pass to generic searchLang func in model
-    DictEntry.searchEnglish(req.params.term, function (err, result) {
-      if (err) {
-        res.sendStatus(204)
-      }
+  app.get('/api/search/:lang/:term', function (req, res) {
+    switch (req.params.lang) {
+    case 'english':
+      DictEntry.searchEnglish(req.params.term, handleResults)
+      break;
+    case 'chinese':
+      DictEntry.searchChinese(req.params.term, handleResults)
+      break;
+    case 'pinyin':
+      DictEntry.searchPinyin(req.params.term, handleResults)
+      break;
+    default:
+      return notifyError(new Error('Invalid language in search parameter.'))
+    }
+
+    function handleResults(err, result) {
+      if (err) { return notifyError(err); }
       res.send(result)
-    })
+    }
+
+    function notifyError(err) {
+        res.sendStatus(204)
+        // TODO notify of error
+    }
   })
 }
 

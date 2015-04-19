@@ -9,16 +9,7 @@ app.factory('DictionarySvc', function($q, $http) {
     return dfd.promise
   }
 
-  function searchEnglish(term) {
-    var dfd = $q.defer()
-    $http.get('/api/search/en/' + term).then(function (result) {
-      dfd.resolve(result.data)
-    })
-    return dfd.promise
-  }
-  // TODO: template to following and use like:
-  // searchEnglish = getFromServer('/api/search/en/')
-  /*function getFromServer(apiPath) {
+  function getFromServer(apiPath) {
     // api path must always include trailing forward slash!
     return function (msg) {
       var dfd = $q.defer()
@@ -27,28 +18,49 @@ app.factory('DictionarySvc', function($q, $http) {
       })
       return dfd.promise
     }
-  }*/
+  }
 
   return { getRandomEntries: getRandomEntries
-         , searchEnglish: searchEnglish
+         , searchEnglish: getFromServer('/api/search/english/')
+         , searchChinese: getFromServer('/api/search/chinese/')
+         , searchPinyin: getFromServer('/api/search/pinyin/')
   }
 })
 
 app.controller('EntryCtrl', function ($scope, DictionarySvc) {
   $scope.count = 5
   $scope.englishTerm = ''
+  $scope.chineseTerm = ''
+  $scope.pinyinTerm = ''
 
-  $scope.refreshEntries = function () {
+  $scope.getRandom = function () {
+    $scope.englishTerm = ''
+    $scope.chineseTerm = ''
+    $scope.pinyinTerm = ''
     DictionarySvc.getRandomEntries($scope.count).then(saveToEntries)
   }
 
   $scope.searchEnglish = function () {
+    $scope.chineseTerm = ''
+    $scope.pinyinTerm = ''
     DictionarySvc.searchEnglish($scope.englishTerm).then(saveToEntries)
+  }
+
+  $scope.searchChinese = function () {
+    $scope.englishTerm = ''
+    $scope.pinyinTerm = ''
+    DictionarySvc.searchChinese($scope.chineseTerm).then(saveToEntries)
+  }
+
+  $scope.searchPinyin = function () {
+    $scope.englishTerm = ''
+    $scope.chineseTerm = ''
+    DictionarySvc.searchPinyin($scope.pinyinTerm).then(saveToEntries)
   }
 
   function saveToEntries(newEntries) {
     $scope.entries = newEntries
   }
 
-  $scope.refreshEntries()
+  $scope.getRandom()
 })

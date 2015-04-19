@@ -8,20 +8,28 @@ var mongoose = require('mongoose')
     })
 
 dictSchema.statics.searchEnglish = searchEnglish
-dictSchema.statics.searchChinese = function (zh) {}
-dictSchema.statics.searchPinyin = function (id) {}
-
-
-dictSchema.statics.getChicken = function (term, cb) {
-  this.find({ english: term }, cb)
-}
-
+dictSchema.statics.searchChinese = searchChinese
+dictSchema.statics.searchPinyin = searchPinyin
 
 //// Function defs
 function searchEnglish(term, cb) {
   var reg = new RegExp(escapeRegExp(term), 'i')
   this.find({ english: reg })
       .sort({ english: 'asc' })
+      .exec(cb)
+}
+
+function searchChinese(term, cb) {
+  var reg = new RegExp(escapeRegExp(term))
+  this.find().or([{ trad: reg }, { simp: reg }])
+      .sort({ trad: 'asc' })
+      .exec(cb)
+}
+
+function searchPinyin(term, cb) {
+  var reg = new RegExp(escapeRegExp(term), 'i')
+  this.find({ pinyin: reg })
+      .sort({ pinyin: 'asc' })
       .exec(cb)
 }
 

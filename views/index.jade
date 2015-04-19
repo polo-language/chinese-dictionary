@@ -17,13 +17,27 @@ html(lang="en")
                     span.input-group-addon Random entries
                     input.form-control(type="text" ng-model="count")
                     span.input-group-btn
-                        button.btn.btn-default(type="button" ng-click="refreshEntries()") Refresh
+                        button.btn.btn-primary(type="button" ng-click="getRandom()")
+                            span.glyphicon.glyphicon-refresh
 
                 .input-group.entry-input
                     span.input-group-addon Search English
                     input.form-control(type="text" ng-model="englishTerm")
                     span.input-group-btn
-                        button.btn.btn-default(type="button" ng-click="searchEnglish()") Search
+                        button.btn.btn-primary(type="button" ng-click="searchEnglish()")
+                            span.glyphicon.glyphicon-search
+                .input-group.entry-input
+                    span.input-group-addon Search Chinese
+                    input.form-control(type="text" ng-model="chineseTerm")
+                    span.input-group-btn
+                        button.btn.btn-primary(type="button" ng-click="searchChinese()")
+                            span.glyphicon.glyphicon-search
+                .input-group.entry-input
+                    span.input-group-addon Search Pinyin
+                    input.form-control(type="text" ng-model="pinyinTerm")
+                    span.input-group-btn
+                        button.btn.btn-primary(type="button" ng-click="searchPinyin()")
+                            span.glyphicon.glyphicon-search
                 
                 
 
