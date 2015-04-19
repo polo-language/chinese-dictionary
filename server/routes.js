@@ -1,9 +1,6 @@
 var express = require('express')
-  , fs = require('fs')
   , path = require('path')
   , DictEntry = require('../models/dictionaryModel').DictEntry
-  , dictPath = './res/dict-json/dict_all.json'
-  , dict = JSON.parse(fs.readFileSync(dictPath, { encoding: 'utf8' }))
 
 module.exports = {
   addRoutes: addRoutes
@@ -18,63 +15,56 @@ function addRoutes(app) {
     res.render('index')
   })
 
-  app.get('/api/random/:count', function (req, res) {
-    // TODO: currently gets first count entries.
-    //       Rewrite to get count _random_ entries.
-    var count = req.params.count
-    if (count < 1) {
-      count = 1
-    } else if (10000 < count) {
-      count = 10000
-    }
-    
-    DictEntry.find({})
-             .limit(count)
-             .exec(sendResults)
-
-    function sendResults(err, result) {
-      if (err) {
-        res.sendStatus(204)
-      }
-      res.send(result)
-    }
-  })
-
-  app.get('/api/search/:lang/:term', function (req, res) {
-    switch (req.params.lang) {
-    case 'english':
-      DictEntry.searchEnglish(req.params.term, handleResults)
-      break;
-    case 'chinese':
-      DictEntry.searchChinese(req.params.term, handleResults)
-      break;
-    case 'pinyin':
-      DictEntry.searchPinyin(req.params.term, handleResults)
-      break;
-    default:
-      return notifyError(new Error('Invalid language in search parameter.'))
-    }
-
-    function handleResults(err, result) {
-      if (err) { return notifyError(err); }
-      res.send(result)
-    }
-
-    function notifyError(err) {
-        res.sendStatus(204)
-        // TODO notify of error
-    }
-  })
+  app.get('/api/random/:count', [getRandom, sendResults])
+  app.get('/api/search/:lang/:term', [getLangTerm, sendResults])
 }
 
 //// functions
-function randomKeys(obj, count) {
-  var keys = Object.keys(obj)
-    , selected = {}
-    , key
-  for (var i = 0; i < count; ++i) {
-    key = keys[Math.floor(keys.length * Math.random())]
-    selected[key] = obj[key]
+function getRandom(req, res, next) {
+  // TODO: currently gets first count entries.
+  //       Rewrite to get count _random_ entries.
+  var done = queryReturned.bind(this, req, next)
+    , count = req.params.count
+  if (count < 1) {
+    count = 1
+  } else if (10000 < count) {
+    count = 10000
   }
-  return selected
+
+  // TODO: DictEntry.getRandom(count, done)
+  DictEntry.find({})
+           .limit(count)
+           .exec(done)
+}
+
+function getLangTerm(req, res, next) {
+  var done = queryReturned.bind(this, req, next)
+  switch (req.params.lang) {
+  case 'english':
+    DictEntry.searchEnglish(req.params.term, done)
+    break;
+  case 'chinese':
+    DictEntry.searchChinese(req.params.term, done)
+    break;
+  case 'pinyin':
+    DictEntry.searchPinyin(req.params.term, done)
+    break;
+  default:
+    done(new Error('Invalid language in search parameter.'), undefined)
+  }
+
+}
+
+function queryReturned(req, next, err, result) {
+  req.err = err
+  req.result = result
+  next()
+}
+
+function sendResults(req, res) {
+  if (req.err) {
+    res.sendStatus(204)
+    // TODO: notify of error
+  }
+  res.send(req.result)
 }
