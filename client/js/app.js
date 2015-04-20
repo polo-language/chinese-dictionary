@@ -1,16 +1,8 @@
 var app = angular.module('ngApp', [])
 
 app.factory('DictionarySvc', function($q, $http) {
-  function getRandomEntries(count) {
-    var dfd = $q.defer();
-    $http.get('/api/random/' + count).then(function (result) {
-      dfd.resolve(result.data)
-    })
-    return dfd.promise
-  }
-
   function getFromServer(apiPath) {
-    // api path must always include trailing forward slash!
+    // apiPath must always include trailing forward slash!
     return function (msg) {
       var dfd = $q.defer()
       $http.get(apiPath + msg).then(function (result) {
@@ -20,7 +12,7 @@ app.factory('DictionarySvc', function($q, $http) {
     }
   }
 
-  return { getRandomEntries: getRandomEntries
+  return { getRandomEntries: getFromServer('/api/random/')
          , searchEnglish: getFromServer('/api/search/english/')
          , searchChinese: getFromServer('/api/search/chinese/')
          , searchPinyin: getFromServer('/api/search/pinyin/')
