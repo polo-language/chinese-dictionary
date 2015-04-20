@@ -21,20 +21,14 @@ function addRoutes(app) {
 
 //// functions
 function getRandom(req, res, next) {
-  // TODO: currently gets first count entries.
-  //       Rewrite to get count _random_ entries.
-  var done = queryReturned.bind(this, req, next)
-    , count = req.params.count
+  var count = req.params.count
   if (count < 1) {
     count = 1
   } else if (10000 < count) {
     count = 10000
   }
 
-  DictEntry.getRandom(count, done)
-  // DictEntry.find({})
-  //          .limit(count)
-  //          .exec(done)
+  DictEntry.getRandom(count, queryReturned.bind(this, req, next))
 }
 
 function getLangTerm(req, res, next) {

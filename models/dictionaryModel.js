@@ -18,12 +18,8 @@ dictSchema.statics.searchPinyin = searchPinyin
 function getRandom(count, cb) {
   var that = this
   this.find().count(function (err, total) {
-    var keys = getRandomKeys(total)
-    each(keys, findOneByKey, cb)
-    // for (var i = 0; i < keys.length; ++i) {
-    //   findOne(keys[i])
-    //   // TODO
-    // }
+    if (err) return cb(err)
+    each(getRandomKeys(total), findOneByKey, cb)
   })
 
   function findOneByKey(oneKey, eachCallback) {
