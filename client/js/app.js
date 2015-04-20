@@ -2,7 +2,7 @@ var app = angular.module('ngApp', [])
 
 app.factory('DictionarySvc', function($q, $http) {
   function getFromServer(apiPath) {
-    // apiPath must always include trailing forward slash!
+    // apiPath must always include trailing forward slash
     return function (msg) {
       var dfd = $q.defer()
       $http.get(apiPath + msg).then(function (result) {
@@ -51,6 +51,10 @@ app.controller('EntryCtrl', function ($scope, DictionarySvc) {
     $scope.englishTerm = ''
     $scope.chineseTerm = ''
     DictionarySvc.searchPinyin($scope.pinyinTerm).then(saveToEntries)
+  }
+
+  $scope.showAltEnglish = function(entry) {
+    entry.showAltEnglish = !entry.showAltEnglish
   }
 
   function saveToEntries(newEntries) {

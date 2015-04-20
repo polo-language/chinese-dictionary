@@ -7,6 +7,7 @@ var mongoose = require('mongoose')
     , simp: String
     , pinyin: String
     , english: [String]
+    , showingAltEnglish: { type: Boolean, default: false }
     })
 
 dictSchema.statics.getRandom = getRandom

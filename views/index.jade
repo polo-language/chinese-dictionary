@@ -54,4 +54,9 @@ html(lang="en")
                             .col-md-2 {{entry.trad}}
                             .col-md-2 {{entry.simp}}
                             .col-md-4 {{entry.pinyin}}
-                            .col-md-4 {{entry.english[0]}}
+                            .col-md-4(ng-click="showAltEnglish(entry)" ng-class="{selectable: entry.english[1]}")
+                                ul.list-unstyled
+                                    li {{entry.english[0]}}
+                                        span.caret(ng-if="entry.english[1]")
+                                    li.altEnglish(ng-repeat="oneEnglish in entry.english.slice(1)" ng-if="entry.showAltEnglish") {{oneEnglish}}
+                                //- ul.list-group.inner.list-unstyled(ng-if="entry.showAltEnglish")
