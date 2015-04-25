@@ -1,4 +1,4 @@
 node_modules/
-res/dict-json/*
+res/
 client/vendor/
 db/data/
