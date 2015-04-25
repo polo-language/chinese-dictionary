@@ -1,6 +1,5 @@
 var express = require('express')
-  , path = require('path')
-  , DictEntry = require('../models/dictionaryModel').DictEntry
+  , DictEntry = require(__dirname + '/../models/dictionaryModel').DictEntry
 
 module.exports = {
   addRoutes: addRoutes
@@ -8,8 +7,9 @@ module.exports = {
 
 function addRoutes(app) {
   app.set('view engine', 'jade')
+  app.set('views', __dirname + '/../views')
 
-  app.use(express.static(path.join(__dirname, '..', 'client')))
+  app.use(express.static(__dirname + '/../client'))
 
   app.get('/', function (req, res) {
     res.render('index')

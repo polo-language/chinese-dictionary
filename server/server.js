@@ -1,6 +1,6 @@
 var express = require('express')
   , mongoose = require('mongoose')
-  , routes = require('./routes')
+  , routes = require(__dirname + '/routes')
   , app = express()
 
 routes.addRoutes(app)

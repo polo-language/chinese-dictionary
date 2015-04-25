@@ -1,6 +1,6 @@
 var MongoClient = require('mongodb')
   , fs = require('fs')
-  , entries = JSON.parse(fs.readFileSync( './res/dict-json/dict_all.json'
+  , entries = JSON.parse(fs.readFileSync(__dirname + '/../res/dict-json/dict_all.json'
                                         , { encoding: 'utf8' }))
   , flag = process.argv[2]
   , dbName = 'chinese-dictionary'
