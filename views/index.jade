@@ -4,8 +4,6 @@ html(lang="en")
         title Chinese Dictionary
         link(rel="stylesheet" href="/vendor/bootstrap/dist/css/bootstrap.min.css")
         link(rel="stylesheet" href="/css/app.css")
-        script(src="/vendor/angular/angular.js")
-        script(src="/js/app.js")
 
     body(ng-app="ngApp")
         .container
@@ -60,3 +58,6 @@ html(lang="en")
                                         span.caret(ng-if="entry.english[1]")
                                     li.altEnglish(ng-repeat="oneEnglish in entry.english.slice(1)" ng-if="entry.showAltEnglish") {{oneEnglish}}
                                 //- ul.list-group.inner.list-unstyled(ng-if="entry.showAltEnglish")
+        
+        script(src="/vendor/angular/angular.min.js")
+        script(src="/js/app.js")
