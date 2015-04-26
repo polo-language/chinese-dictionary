@@ -3,6 +3,8 @@ var express = require('express')
   , routes = require(__dirname + '/routes')
   , app = express()
 
+process.env.PWD = process.cwd()
+
 routes.addRoutes(app)
 
 //// start-up
