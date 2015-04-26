@@ -5,12 +5,14 @@
   "main": "./server/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server"
+    "start": "node server",
+    "postinstall": "bower install"
   },
   "author": "Angelo Polo <polo.language@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "async-each": "^0.1.6",
+    "bower": "^1.4.1",
     "express": "^4.12.3",
     "jade": "^1.9.2",
     "mongodb": "^2.0.27",

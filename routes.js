@@ -9,7 +9,7 @@ function addRoutes(app) {
   app.set('view engine', 'jade')
   app.set('views', __dirname + '/views')
 
-  app.use(express.static(process.env.STATIC))
+  app.use(express.static(__dirname + '/client'))
 
   app.get('/', function (req, res) {
     res.render('index')
