@@ -10,7 +10,7 @@ html(lang="en")
             h1 Chinese Dictionary
 
             div(ng-controller="EntryCtrl")
-
+                //- Query input
                 .input-group.entry-input
                     span.input-group-addon Random entries
                     input.form-control(type="text" ng-model="numRandom")
@@ -19,26 +19,17 @@ html(lang="en")
                             span.glyphicon.glyphicon-refresh
 
                 .input-group.entry-input
-                    span.input-group-addon Search English
-                    input.form-control(type="text" ng-model="englishTerm")
+                    span.input-group-addon
+                        select(ng-model="searchLang")
+                            option(value="english") English
+                            option(value="chinese") Chinese
+                            option(value="pinyin") Pinyin
+                    input.form-control(type="text" ng-model="searchTerm")
                     span.input-group-btn
-                        button.btn.btn-primary(type="button" ng-click="searchEnglish()")
+                        button.btn.btn-primary(type="button" ng-click="search()")
                             span.glyphicon.glyphicon-search
-                .input-group.entry-input
-                    span.input-group-addon Search Chinese
-                    input.form-control(type="text" ng-model="chineseTerm")
-                    span.input-group-btn
-                        button.btn.btn-primary(type="button" ng-click="searchChinese()")
-                            span.glyphicon.glyphicon-search
-                .input-group.entry-input
-                    span.input-group-addon Search Pinyin
-                    input.form-control(type="text" ng-model="pinyinTerm")
-                    span.input-group-btn
-                        button.btn.btn-primary(type="button" ng-click="searchPinyin()")
-                            span.glyphicon.glyphicon-search
-                
-                
 
+                //- Dictionary table
                 ul.list-group
                     li.list-group-item.list-group-item-info
                         .row

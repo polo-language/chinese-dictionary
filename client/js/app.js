@@ -13,44 +13,23 @@ app.factory('DictionarySvc', function($q, $http) {
   }
 
   return { getRandomEntries: getFromServer('/api/random/')
-         , searchEnglish: getFromServer('/api/search/english/')
-         , searchChinese: getFromServer('/api/search/chinese/')
-         , searchPinyin: getFromServer('/api/search/pinyin/')
+         , search: getFromServer('/api/search/')
   }
 })
 
 app.controller('EntryCtrl', function ($scope, DictionarySvc) {
   $scope.numRandom = 5
-  $scope.englishTerm = ''
-  $scope.chineseTerm = ''
-  $scope.pinyinTerm = ''
+  $scope.searchTerm = ''
+  $scope.searchLang = 'english'
 
   $scope.getRandom = function () {
-    $scope.englishTerm = ''
-    $scope.chineseTerm = ''
-    $scope.pinyinTerm = ''
+    $scope.searchTerm = ''
     DictionarySvc.getRandomEntries($scope.numRandom).then(saveToEntries)
   }
 
-  $scope.searchEnglish = function () {
+  $scope.search = function () {
     $scope.numRandom = ''
-    $scope.chineseTerm = ''
-    $scope.pinyinTerm = ''
-    DictionarySvc.searchEnglish($scope.englishTerm).then(saveToEntries)
-  }
-
-  $scope.searchChinese = function () {
-    $scope.numRandom = ''
-    $scope.englishTerm = ''
-    $scope.pinyinTerm = ''
-    DictionarySvc.searchChinese($scope.chineseTerm).then(saveToEntries)
-  }
-
-  $scope.searchPinyin = function () {
-    $scope.numRandom = ''
-    $scope.englishTerm = ''
-    $scope.chineseTerm = ''
-    DictionarySvc.searchPinyin($scope.pinyinTerm).then(saveToEntries)
+    DictionarySvc.search($scope.searchLang + '/' + $scope.searchTerm).then(saveToEntries)
   }
 
   $scope.showAltEnglish = function(entry) {
