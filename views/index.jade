@@ -2,9 +2,7 @@ doctype html
 html(lang="en")
     head
         title Chinese Dictionary
-        //link(rel="stylesheet" href="/vendor/bootstrap/dist/css/bootstrap.min.css")
         link(rel="stylesheet" href="/vendor/components-font-awesome/css/font-awesome.min.css")
-        //- link(rel="stylesheet" href="/vendor/pure/base-min.css")
         link(rel="stylesheet" href="/vendor/pure/pure-min.css")
         link(rel="stylesheet" href="/css/app.css")
 
@@ -15,42 +13,39 @@ html(lang="en")
             div(ng-controller="EntryCtrl")
                 //- Query input
                 .pure-g.entry-input
-                    span.pure-u-5-24 Random entries
+                    span.pure-u-5-24.label-box.label-box-text Random entries
                     input.pure-u-16-24(type="text" ng-model="numRandom")
                     span.pure-u-2-24
-                        button.pure-button(type="button" ng-click="getRandom()")
+                        button.pure-button.pure-button-primary(type="button" ng-click="getRandom()")
                             i.fa.fa-search
 
                 .pure-g.entry-input
-                    span.pure-u-5-24
-                        select(ng-model="searchLang")
-                            option(value="english") English
-                            option(value="chinese") Chinese
-                            option(value="pinyin") Pinyin
+                    select(ng-model="searchLang").pure-u-5-24.label-box
+                        option(value="english") English
+                        option(value="chinese") Chinese
+                        option(value="pinyin") Pinyin
                     input.pure-u-16-24(type="text" ng-model="searchTerm")
                     span.pure-u-2-24
-                        button.pure-button(type="button" ng-click="search()")
+                        button.pure-button.pure-button-primary(type="button" ng-click="search()")
                             i.fa.fa-search
 
                 //- Dictionary table
-                ul.list-group
-                    li.list-group-item.list-group-item-info
-                        .row
-                            .col-md-2 Traditional
-                            .col-md-2 Simplified
-                            .col-md-4 Pinyin
-                            .col-md-4 English
-
-                    li.list-group-item(ng-repeat="entry in entries")
-                        .row
-                            .col-md-2 {{entry.trad}}
-                            .col-md-2 {{entry.simp}}
-                            .col-md-4 {{entry.pinyin}}
-                            .col-md-4(ng-click="showAltEnglish(entry)" ng-class="{selectable: entry.english[1]}")
-                                ul.list-unstyled
-                                    li {{entry.english[0]}}
-                                        span.caret(ng-if="entry.english[1]")
-                                    li.altEnglish(ng-repeat="oneEnglish in entry.english.slice(1)" ng-if="entry.showAltEnglish") {{oneEnglish}}
+                table.pure-table.pure-table-horizontal
+                    thead
+                        tr
+                            td.trad Traditional
+                            td.simp Simplified
+                            td.pinyin Pinyin
+                            td.english English
+                    tbody
+                        tr(ng-repeat="entry in entries")
+                            td.trad {{entry.trad}}
+                            td.simp {{entry.simp}}
+                            td.pinyin {{entry.pinyin}}
+                            td.english(ng-click="showAltEnglish(entry)" ng-class="{selectable: entry.english[1]}")
+                                span {{entry.english[0]}}
+                                    i.fa.fa-angle-down.right-big-down(ng-if="entry.english[1]")
+                                    div.altEnglish(ng-repeat="oneEnglish in entry.english.slice(1)" ng-if="entry.showAltEnglish") {{oneEnglish}}
                                 //- ul.list-group.inner.list-unstyled(ng-if="entry.showAltEnglish")
         
         script(src="/vendor/angular/angular.min.js")

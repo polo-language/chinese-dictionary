@@ -16,3 +16,33 @@
 .dropdown {
     background-color: #eee;
 }
+
+.right-big-down {
+    font-size: 1.5em;
+    float: right;
+}
+
+.trad,
+.simp,
+.pinyin {
+    vertical-align: text-top;
+}
+
+.label-box {
+    display: inline-block;
+    white-space: nowrap;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 100%;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    border: none rgba(0, 0, 0, 0);  /*IE9 + everything else*/
+    background-color: #E6E6E6;
+}
+
+.label-box-text {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
