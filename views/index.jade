@@ -2,7 +2,10 @@ doctype html
 html(lang="en")
     head
         title Chinese Dictionary
-        link(rel="stylesheet" href="/vendor/bootstrap/dist/css/bootstrap.min.css")
+        //link(rel="stylesheet" href="/vendor/bootstrap/dist/css/bootstrap.min.css")
+        link(rel="stylesheet" href="/vendor/components-font-awesome/css/font-awesome.min.css")
+        //- link(rel="stylesheet" href="/vendor/pure/base-min.css")
+        link(rel="stylesheet" href="/vendor/pure/pure-min.css")
         link(rel="stylesheet" href="/css/app.css")
 
     body(ng-app="ngApp")
@@ -11,23 +14,23 @@ html(lang="en")
 
             div(ng-controller="EntryCtrl")
                 //- Query input
-                .input-group.entry-input
-                    span.input-group-addon Random entries
-                    input.form-control(type="text" ng-model="numRandom")
-                    span.input-group-btn
-                        button.btn.btn-primary(type="button" ng-click="getRandom()")
-                            span.glyphicon.glyphicon-refresh
+                .pure-g.entry-input
+                    span.pure-u-5-24 Random entries
+                    input.pure-u-16-24(type="text" ng-model="numRandom")
+                    span.pure-u-2-24
+                        button.pure-button(type="button" ng-click="getRandom()")
+                            i.fa.fa-search
 
-                .input-group.entry-input
-                    span.input-group-addon
+                .pure-g.entry-input
+                    span.pure-u-5-24
                         select(ng-model="searchLang")
                             option(value="english") English
                             option(value="chinese") Chinese
                             option(value="pinyin") Pinyin
-                    input.form-control(type="text" ng-model="searchTerm")
-                    span.input-group-btn
-                        button.btn.btn-primary(type="button" ng-click="search()")
-                            span.glyphicon.glyphicon-search
+                    input.pure-u-16-24(type="text" ng-model="searchTerm")
+                    span.pure-u-2-24
+                        button.pure-button(type="button" ng-click="search()")
+                            i.fa.fa-search
 
                 //- Dictionary table
                 ul.list-group

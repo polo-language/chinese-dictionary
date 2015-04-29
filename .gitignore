@@ -1,5 +1,5 @@
 node_modules/
 res/
-client/vendor/semantic/
+client/vendor/
 db/data/
 .env
