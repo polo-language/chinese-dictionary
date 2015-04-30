@@ -1,6 +1,46 @@
+body {
+    background-color: #2D2838;
+}
+
+.container {
+    width: 950px;
+    padding: 25px;
+    margin: auto;
+}
+
+.title {
+    text-align: center;
+    margin: 10px 50px;
+    background-color: #88BBF2;
+}
+
 .entry-input {
     max-width: 600px;
     margin-bottom: 25px;
+}
+
+input {
+    background-color: #ccc;
+    color: #333;
+    padding-left: 10px;
+}
+
+table {
+    background-color: #333;
+    color: #ddd;
+}
+
+.trad,
+.simp {
+    width: 150px;
+}
+
+.pinyin {
+    width: 250px;
+}
+
+.english {
+    width: 400px;
 }
 
 .selectable {
@@ -31,12 +71,11 @@
 .label-box {
     display: inline-block;
     white-space: nowrap;
-    text-align: center;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     font-size: 100%;
-    padding-left: 0.5em;
+    padding-left: 1.5em;
     padding-right: 0.5em;
     border: none rgba(0, 0, 0, 0);  /*IE9 + everything else*/
     background-color: #E6E6E6;
