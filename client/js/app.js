@@ -24,13 +24,22 @@ app.controller('EntryCtrl', function ($scope, DictionarySvc) {
   $scope.wholeWord = true
 
   $scope.getRandom = function () {
+    if (!$scope.numRandom) return
+
     $scope.searchTerm = ''
     DictionarySvc.getRandomEntries($scope.numRandom).then(saveToEntries)
   }
 
   $scope.search = function () {
+    if (!$scope.searchTerm) return
+
+    var query = '?wholeword=false'
     $scope.numRandom = ''
-    DictionarySvc.search($scope.searchLang + '/' + $scope.searchTerm).then(saveToEntries)
+
+    if ($scope.wholeWord && $scope.searchLang === 'english') {
+      query = '?wholeword=true'
+    }
+    DictionarySvc.search($scope.searchLang + '/' + $scope.searchTerm + query).then(saveToEntries)
   }
 
   $scope.showAltEnglish = function(entry) {

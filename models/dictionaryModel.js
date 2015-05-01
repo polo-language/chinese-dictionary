@@ -36,8 +36,14 @@ function getRandom(count, cb) {
   }
 }
 
-function searchEnglish(term, cb) {
-  var reg = new RegExp(escapeRegExp(term), 'i')
+function searchEnglish(term, wholeword, cb) {
+  var reg
+
+  if (wholeword === 'true') {
+    reg = new RegExp('(^|\\s)' + escapeRegExp(term) + '(\\s|$)', 'i')
+  } else {
+    reg = new RegExp(escapeRegExp(term), 'i')
+  }
   this.find({ english: reg })
       .sort({ english: 'asc' })
       .exec(cb)

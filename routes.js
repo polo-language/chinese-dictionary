@@ -35,7 +35,7 @@ function getLangTerm(req, res, next) {
   var done = queryReturned.bind(this, req, next)
   switch (req.params.lang) {
   case 'english':
-    DictEntry.searchEnglish(req.params.term, done)
+    DictEntry.searchEnglish(req.params.term, req.query.wholeword, done)
     break;
   case 'chinese':
     DictEntry.searchChinese(req.params.term, done)
