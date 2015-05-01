@@ -29,6 +29,12 @@ html(lang="en")
                     span.pure-u-2-24
                         button.pure-button.pure-button-primary(type="button" ng-click="search()")
                             i.fa.fa-search
+                .pure-g.entry-input(ng-show="searchLang === 'english'" id="search-options-bar")
+                    span.pure-u-2-24
+                    span(id="search-options-cell").pure-u-20-24
+                        label
+                            input(type="checkbox" ng-model="wholeWord")
+                            | Whole word
 
                 //- Dictionary table
                 table.pure-table.pure-table-horizontal

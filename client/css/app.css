@@ -11,6 +11,7 @@ body {
 .title {
     text-align: center;
     margin: 10px 50px;
+    border-radius: 2px;
     color: #ddd;
     background-color: #222;
 }
@@ -85,4 +86,18 @@ table {
 .label-box-text {
     padding-top: 0.5em;
     padding-bottom: 0.5em;
+}
+
+#search-options-bar {
+    margin-top: -15px;
+}
+
+#search-options-cell {
+    background-color: #888;
+    border-radius: 5px;
+    padding: 5px 0px;
+}
+
+input[type="checkbox"] {
+    margin: 0px 8px;
 }

@@ -21,6 +21,7 @@ app.controller('EntryCtrl', function ($scope, DictionarySvc) {
   $scope.numRandom = 5
   $scope.searchTerm = ''
   $scope.searchLang = 'english'
+  $scope.wholeWord = true
 
   $scope.getRandom = function () {
     $scope.searchTerm = ''
