@@ -13,21 +13,21 @@ html(lang="en")
 
             div(ng-controller="EntryCtrl")
                 //- Query input
-                .pure-g.entry-input
+                form.pure-g.entry-input
                     span.pure-u-5-24.label-box.label-box-text Random
                     input.pure-u-16-24(type="text" ng-model="numRandom")
                     span.pure-u-2-24
-                        button.pure-button.pure-button-primary(type="button" ng-click="getRandom()")
+                        button.pure-button.pure-button-primary(type="submit" ng-click="getRandom()")
                             i.fa.fa-repeat
 
-                .pure-g.entry-input
+                form.pure-g.entry-input
                     select(ng-model="searchLang").pure-u-5-24.label-box
                         option(value="english") English
                         option(value="chinese") Chinese
                         option(value="pinyin") Pinyin
                     input.pure-u-16-24(type="text" ng-model="searchTerm")
                     span.pure-u-2-24
-                        button.pure-button.pure-button-primary(type="button" ng-click="search()")
+                        button.pure-button.pure-button-primary(type="submit" ng-click="search()")
                             i.fa.fa-search
                 .pure-g.entry-input(ng-show="searchLang === 'english'" id="search-options-bar")
                     span.pure-u-2-24

@@ -8,6 +8,10 @@
     "start": "node server",
     "postinstall": "bower install"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/polo-language/chinese-dictionary.git"
+  },
   "author": "Angelo Polo <polo.language@gmail.com>",
   "license": "MIT",
   "dependencies": {
