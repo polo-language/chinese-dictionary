@@ -11,6 +11,7 @@ html(lang="en")
             .title
                 h1 Chinese Dictionary
 
+            //- Form and table
             div(ng-controller="EntryCtrl")
                 //- Query input
                 form.pure-g.entry-input
@@ -20,6 +21,7 @@ html(lang="en")
                         button.pure-button.pure-button-primary(type="submit" ng-click="getRandom()")
                             i.fa.fa-repeat
 
+                //- Search form
                 form.pure-g.entry-input
                     select(ng-model="searchLang").pure-u-5-24.label-box
                         option(value="english") English
@@ -33,10 +35,10 @@ html(lang="en")
                     span.pure-u-2-24
                     span(id="search-options-cell").pure-u-20-24
                         label(ng-show="searchLang === 'english'")
-                            input(type="checkbox" ng-model="wholeWord")
+                            input(type="checkbox" ng-model="wholeWord" ng-click="wholeWordSync($event)")
                             | Whole word
                         label
-                            input(type="checkbox" ng-model="exactMatch")
+                            input(type="checkbox" ng-model="exactMatch" ng-click="exactMatchSync($event)")
                             | Exact match
 
                 //- Dictionary table

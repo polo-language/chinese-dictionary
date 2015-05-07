@@ -1,10 +1,13 @@
 // Requires manual removal of final comma
 var fs = require('fs')
   , readline = require('readline')
-  , inFilePath = './res/CC-CEDICT/cedict_1_0_ts_utf-8_mdbg.txt'
+  , inFilePath = __dirname + '/res/CC-CEDICT/cedict_1_0_ts_utf-8_mdbg.txt'
   , rl = readline.createInterface(fs.createReadStream(inFilePath), console.log)
-  , outFilePath = './res/dict-json/dict_all.json'
+  , outFileDir = __dirname + '/res/dict-json'
+  , outFilePath = outFileDir + '/dict_all.json'
   , json = '{\n'
+
+fs.mkdirSync(outFileDir)
 
 rl.on('line', function (line) {
   var bkdn = breakdownLine(line.toString('utf8'))
