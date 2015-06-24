@@ -11,30 +11,35 @@ html(lang="en")
             .title
                 h1 Chinese Dictionary
 
+            //- Form and table
             div(ng-controller="EntryCtrl")
                 //- Query input
-                .pure-g.entry-input
+                form.pure-g.entry-input
                     span.pure-u-5-24.label-box.label-box-text Random
                     input.pure-u-16-24(type="text" ng-model="numRandom")
                     span.pure-u-2-24
-                        button.pure-button.pure-button-primary(type="button" ng-click="getRandom()")
+                        button.pure-button.pure-button-primary(type="submit" ng-click="getRandom()")
                             i.fa.fa-repeat
 
-                .pure-g.entry-input
+                //- Search form
+                form.pure-g.entry-input
                     select(ng-model="searchLang").pure-u-5-24.label-box
                         option(value="english") English
                         option(value="chinese") Chinese
                         option(value="pinyin") Pinyin
                     input.pure-u-16-24(type="text" ng-model="searchTerm")
                     span.pure-u-2-24
-                        button.pure-button.pure-button-primary(type="button" ng-click="search()")
+                        button.pure-button.pure-button-primary(type="submit" ng-click="search()")
                             i.fa.fa-search
-                .pure-g.entry-input(ng-show="searchLang === 'english'" id="search-options-bar")
+                .pure-g.entry-input(id="search-options-bar")
                     span.pure-u-2-24
                     span(id="search-options-cell").pure-u-20-24
-                        label
-                            input(type="checkbox" ng-model="wholeWord")
+                        label(ng-show="searchLang === 'english'")
+                            input(type="checkbox" ng-model="wholeWord" ng-click="wholeWordSync($event)")
                             | Whole word
+                        label
+                            input(type="checkbox" ng-model="exactMatch" ng-click="exactMatchSync($event)")
+                            | Exact match
 
                 //- Dictionary table
                 table.pure-table.pure-table-horizontal

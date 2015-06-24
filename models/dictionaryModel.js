@@ -36,11 +36,13 @@ function getRandom(count, cb) {
   }
 }
 
-function searchEnglish(term, wholeword, cb) {
+function searchEnglish(term, wholeword, exactmatch, cb) {
   var reg
 
   if (wholeword === 'true') {
     reg = new RegExp('(^|\\s)' + escapeRegExp(term) + '(\\s|$)', 'i')
+  } else if (exactmatch === 'true') {
+    reg = new RegExp('(^)' + escapeRegExp(term) + '($)', 'i')
   } else {
     reg = new RegExp(escapeRegExp(term), 'i')
   }
