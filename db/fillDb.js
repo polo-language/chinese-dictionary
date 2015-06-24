@@ -1,48 +1,51 @@
 var MongoClient = require('mongodb')
   , fs = require('fs')
-  , entries = JSON.parse(fs.readFileSync(__dirname + '/../res/dict-json/dict_all.json'
-                                        , { encoding: 'utf8' }))
   , flag = process.argv[2]
   , dbName = 'chinese-dictionary'
 
 if (flag === '-r' || flag === '--remote') {
-  connectRemote()
+  connectRemote(getEntries())
 } else if (flag === '-l' || flag === '--local') {
-  connectLocal()
+  connectLocal(getEntries())
 } else {
   console.error('Usage:\n' +
                 'node db/fillDb --remote <username> <password>\n' +
                 'node db/fillDb --local')
 }
 
-function connectRemote() {
+function getEntries() {
+  return JSON.parse(fs.readFileSync(__dirname + '/../res/dict-json/dict_all.json'
+                                        , { encoding: 'utf8' }))
+}
+
+function connectRemote(entries) {
   MongoClient.connect( 'mongodb://' + process.argv[3] + ':' + process.argv[4] +
                        '@ds061518.mongolab.com:61518/' + dbName
                      , function (err, db) {
     if (err) return console.error(err);
-    fillCollection(db)
+    fillCollection(db, entries)
     // setTimeout(function () { db.close(); }, 30000)
   })
 }
-function connectLocal() {
+function connectLocal(entries) {
   MongoClient.connect('mongodb://localhost/', function (err, db) {
     if (err) return console.error(err);
     var myDb = db.db(dbName)
-    fillCollection(myDb) 
+    fillCollection(myDb, entries)
     // setTimeout(function () { db.close(); }, 3000)
   })
 }
 
-function fillCollection(db) {
+function fillCollection(db, entries) {
   var n = 0
     , entry
   db.dropCollection('DictEntries')
-  db.createCollection('DictEntries', function (err, nebulae) {
+  db.createCollection('DictEntries', function (err, collection) {
     for (var trad in entries) {
       entry = entries[trad]
       entry.key = n
       entry.trad = trad
-      addObject(nebulae, entry)
+      addObject(collection, entry)
       ++n
     }
   })
