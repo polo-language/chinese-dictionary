@@ -27,26 +27,21 @@ app.factory('DictionarySvc', function($q, $http) {
         }
       }
     } else { // lang === 'english'
-      // TODO: close over arrays of lengths to reduce calculatsions (requires call to indexOf)
-      return function (a, b) {
-        var iA, iB, aLength, bLength
+      for (var i = 0; i < data.length; ++i) {
         // find (first) cell in array of English results containing search term
-        for (iA = 0; iA < a.english.length; ++iA) {
-          if (a.english[iA].search(new RegExp(term, 'i')) > -1) {
-            // current iA gives index of cell containing term (defaults last cell)
+        for (var j = 0; j < data[i].english.length; ++j) {
+          if (data[i].english[j].search(new RegExp(term, 'i')) > -1) {
             break
           }
         }
-        for (iB = 0; iB < b.english.length; ++iB) {
-          if (b.english[iB].search(new RegExp(term, 'i')) > -1) {
-            break
-          }
-        }
-        aLength = a.english[iA].split(' ').length
-        bLength = b.english[iB].split(' ').length
-        if (aLength < bLength) {
+        // current j gives index of cell containing term (falls through to array length)
+        data[i].englishSearchLength = data[i].english[j].split(' ').length
+      }
+
+      return function (a, b) {
+        if (a.englishSearchLength < b.englishSearchLength) {
           return -1
-        } else if (aLength > bLength) {
+        } else if (a.englishSearchLength > b.englishSearchLength) {
           return 1
         } else {
           return 0
