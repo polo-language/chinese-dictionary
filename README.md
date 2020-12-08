@@ -5,4 +5,4 @@ Chinese dictionary: traditional, simplified, and English served in an Angular we
 https://chinese-dictionary.herokuapp.com/
 
 ## Author
-Angelo Polo <polo.language@gmail.com>
+Angelo Polo <language.devel@gmail.com>

@@ -2,7 +2,8 @@ doctype html
 html(lang="en")
     head
         title Chinese Dictionary
-        link(rel="stylesheet" href="/vendor/components-font-awesome/css/font-awesome.min.css")
+        link(rel="stylesheet" href="/vendor/components-font-awesome/css/fontawesome.min.css")
+        link(rel="stylesheet" href="/vendor/components-font-awesome/css/solid.css")
         link(rel="stylesheet" href="/vendor/pure/pure-min.css")
         link(rel="stylesheet" href="/css/app.css")
 
@@ -19,7 +20,7 @@ html(lang="en")
                     input.pure-u-16-24(type="text" ng-model="numRandom")
                     span.pure-u-2-24
                         button.pure-button.pure-button-primary(type="submit" ng-click="getRandom()")
-                            i.fa.fa-repeat
+                            i.fas.fa-redo-alt
 
                 //- Search form
                 form.pure-g.entry-input
@@ -30,7 +31,7 @@ html(lang="en")
                     input.pure-u-16-24(type="text" ng-model="searchTerm")
                     span.pure-u-2-24
                         button.pure-button.pure-button-primary(type="submit" ng-click="search()")
-                            i.fa.fa-search
+                            i.fas.fa-search
                 .pure-g.entry-input(id="search-options-bar")
                     span.pure-u-2-24
                     span(id="search-options-cell").pure-u-20-24
@@ -56,7 +57,7 @@ html(lang="en")
                             td.pinyin {{entry.pinyin}}
                             td.english(ng-click="showAltEnglish(entry)" ng-class="{selectable: entry.english[1]}")
                                 span {{entry.english[0]}}
-                                    i.fa.fa-angle-down.right-big-down(ng-if="entry.english[1]")
+                                    i.fas.fa-angle-down.right-big-down(ng-if="entry.english[1]")
                                     div.altEnglish(ng-repeat="oneEnglish in entry.english.slice(1)" ng-if="entry.showAltEnglish") {{oneEnglish}}
                                 //- ul.list-group.inner.list-unstyled(ng-if="entry.showAltEnglish")
         

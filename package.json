@@ -1,10 +1,9 @@
 {
   "name": "chinese-dictionary",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Chinese dictionary: traditional, simplified, and English served in an Angular web app. Uses CC-CEDICT data.",
   "main": "./server/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
     "postinstall": "bower install"
   },
@@ -12,18 +11,18 @@
     "type": "git",
     "url": "https://github.com/polo-language/chinese-dictionary.git"
   },
-  "author": "Angelo Polo <polo.language@gmail.com>",
+  "author": "Angelo Polo <language.devel@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "async-each": "^0.1.6",
-    "bower": "^1.4.1",
-    "express": "^4.12.3",
-    "jade": "^1.9.2",
-    "mongodb": "^2.0.27",
-    "mongoose": "^4.0.1"
+    "async-each": "^1.0.3",
+    "bower": "^1.8.8",
+    "express": "^4.17.1",
+    "pug": "^3.0.0",
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.4"
   },
   "engines": {
-    "node": "^0.12.0",
-    "npm": "^2.5.1"
+    "node": "^15.3.0",
+    "npm": "^6.14.9"
   }
 }
