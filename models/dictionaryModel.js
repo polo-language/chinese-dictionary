@@ -18,7 +18,7 @@ dictSchema.statics.searchPinyin = searchPinyin
 //// Function defs
 function getRandom(count, cb) {
   var that = this
-  this.find().count(function (err, total) {
+  this.find().estimatedDocumentCount(function (err, total) {
     if (err) return cb(err)
     each(getRandomKeys(total), findOneByKey, cb)
   })
