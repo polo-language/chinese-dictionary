@@ -1,6 +1,6 @@
 {
   "name": "chinese-dictionary",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Chinese dictionary: traditional, simplified, and English served in an Angular web app. Uses CC-CEDICT data.",
   "main": "./server/server.js",
   "scripts": {
@@ -18,8 +18,8 @@
     "bower": "^1.8.8",
     "express": "^4.17.1",
     "pug": "^3.0.0",
-    "mongodb": "^3.6.3",
-    "mongoose": "^5.11.4"
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.15"
   },
   "engines": {
     "node": "^15.3.0",
