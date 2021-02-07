@@ -19,6 +19,7 @@
     "express": "^4.17.1",
     "pug": "^3.0.0",
     "mongodb": "^3.6.4",
+    "mongodb-uri": "^0.9.7",
     "mongoose": "^5.11.15"
   },
   "engines": {

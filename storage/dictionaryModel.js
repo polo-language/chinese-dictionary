@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const each = require('async-each')
 const collectionName = 'DictEntries'
+
 const dictSchema = new mongoose.Schema({
   key: Number,
   trad: String,
@@ -9,32 +10,40 @@ const dictSchema = new mongoose.Schema({
   english: [String],
   showingAltEnglish: { type: Boolean, default: false }
 })
-
 dictSchema.statics.getRandom = getRandom
 dictSchema.statics.searchEnglish = searchEnglish
 dictSchema.statics.searchChinese = searchChinese
 dictSchema.statics.searchPinyin = searchPinyin
 
-module.exports.DictEntry = mongoose.model('DictEntry', dictSchema, collectionName)
+const DictEntry = mongoose.model('DictEntry', dictSchema, collectionName)
 
-function getRandom(count, cb) {
-  const that = this
-  this.find().estimatedDocumentCount(function (err, total) {
-    if (err) return cb(err)
-    each(getRandomKeys(total), findOneByKey, cb)
+module.exports = {
+  DictEntry,
+}
+
+function getRandom(count, callback) {
+  const model = this
+  model.find().estimatedDocumentCount(function (err, total) {
+    if (err) return callback(err)
+    each(
+        getRandomKeys(count, total),
+        (oneKey, cb) => model.findOne({ key: oneKey }, cb),
+        callback)
   })
+}
 
-  function findOneByKey(oneKey, eachCallback) {
-    that.findOne({ key: oneKey }, eachCallback)
+function getRandomKeys(count, total) {
+  const keys = new Set()
+  while (keys.size < count) {
+    keys.add(randomInteger(0, total))
   }
+  return Array.from(keys)
+}
 
-  function getRandomKeys(total) {
-    const keys = []
-    for (let i = 0; i < count; ++i) {
-      keys.push(Math.floor(total * Math.random()))
-    }
-    return keys
-  }
+function randomInteger(min, max) {
+  const minInt = Math.ceil(min)
+  const maxInt = Math.floor(max)
+  return Math.floor(minInt + (maxInt - minInt) * Math.random())
 }
 
 function searchEnglish(term, wholeword, exactmatch, cb) {
