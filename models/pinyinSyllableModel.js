@@ -1,6 +1,6 @@
-var mongoose = require('mongoose')
-  , syllableSchema = new mongoose.Schema({ syllable: String })
-  , collectionName = 'pinyin_syllable'
+const mongoose = require('mongoose')
+const syllableSchema = new mongoose.Schema({ syllable: String })
+const collectionName = 'pinyin_syllable'
 
 syllableSchema.statics.getSyllables = function (cb) {
   this.find()

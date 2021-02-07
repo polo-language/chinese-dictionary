@@ -1,7 +1,7 @@
-var MongoClient = require('mongodb')
-  , fs = require('fs')
-  , flag = process.argv[2]
-  , dbName = 'chinese-dictionary'
+const MongoClient = require('mongodb')
+const fs = require('fs')
+const flag = process.argv[2]
+const dbName = 'chinese-dictionary'
 
 if (flag === '-r' || flag === '--remote') {
   connectRemote(getEntries())
@@ -14,8 +14,10 @@ if (flag === '-r' || flag === '--remote') {
 }
 
 function getEntries() {
-  return JSON.parse(fs.readFileSync(__dirname + '/../res/dict-json/dict_all.json'
-                                        , { encoding: 'utf8' }))
+  return JSON.parse(fs.readFileSync(
+      __dirname + '/../res/dict-json/dict_all.json',
+      { encoding: 'utf8' }
+  ))
 }
 
 function connectRemote(entries) {
@@ -30,19 +32,18 @@ function connectRemote(entries) {
 function connectLocal(entries) {
   MongoClient.connect('mongodb://localhost/', function (err, db) {
     if (err) return console.error(err);
-    var myDb = db.db(dbName)
+    const myDb = db.db(dbName)
     fillCollection(myDb, entries)
     // setTimeout(function () { db.close(); }, 3000)
   })
 }
 
 function fillCollection(db, entries) {
-  var n = 0
-    , entry
+  let n = 0
   db.dropCollection('DictEntries')
   db.createCollection('DictEntries', function (err, collection) {
-    for (var trad in entries) {
-      entry = entries[trad]
+    for (const trad in entries) {
+      const entry = entries[trad]
       entry.key = n
       entry.trad = trad
       addObject(collection, entry)

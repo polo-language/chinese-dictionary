@@ -1,16 +1,16 @@
 // Requires manual removal of final comma
-var fs = require('fs')
-  , readline = require('readline')
-  , inFilePath = __dirname + '/res/CC-CEDICT/cedict_1_0_ts_utf-8_mdbg.txt'
-  , rl = readline.createInterface(fs.createReadStream(inFilePath), console.log)
-  , outFileDir = __dirname + '/res/dict-json'
-  , outFilePath = outFileDir + '/dict_all.json'
-  , json = '{\n'
+const fs = require('fs')
+const readline = require('readline')
+const inFilePath = __dirname + '/res/CC-CEDICT/cedict_1_0_ts_utf-8_mdbg.txt'
+const rl = readline.createInterface(fs.createReadStream(inFilePath), console.log)
+const outFileDir = __dirname + '/res/dict-json'
+const outFilePath = outFileDir + '/dict_all.json'
+const json = '{\n'
 
 fs.mkdirSync(outFileDir)
 
 rl.on('line', function (line) {
-  var bkdn = breakdownLine(line.toString('utf8'))
+  const bkdn = breakdownLine(line.toString('utf8'))
   if (!bkdn) { return; }
   escapeForJson(bkdn)
 
@@ -18,7 +18,7 @@ rl.on('line', function (line) {
   json += '        "simp": "' + bkdn.simp + '",\n'
   json += '        "pinyin": "' + bkdn.pinyin + '",\n'
   json += '        "english": [\n'
-  for (var i = 0; i < bkdn.english.length; ++i) {
+  for (let i = 0; i < bkdn.english.length; ++i) {
     json += '            "' + bkdn.english[i] + '"'
     if (i !== bkdn.english.length - 1) {
       json += ','
@@ -41,21 +41,23 @@ rl.on('close', function () {
 
 function breakdownLine(line) {
   if (line[0] === '#') { return undefined; }
-  var lineRegex = /(.*?) (.*?) \[(.*?)\] \/(.*)\//
-    , breakdown = lineRegex.exec(line)
-  return { trad: breakdown[1]
-         , simp: breakdown[2]
-         , pinyin: breakdown[3]
-         , english: breakdown[4].split('/')
+  const lineRegex = /(.*?) (.*?) \[(.*?)\] \/(.*)\//
+  const breakdown = lineRegex.exec(line)
+  return {
+    trad: breakdown[1],
+    simp: breakdown[2],
+    pinyin: breakdown[3],
+    english: breakdown[4].split('/')
   }
 }
 
+// Modifies its argument
 function escapeForJson(obj) {
-  for (var key in obj) {
+  for (const key in obj) {
     if (typeof obj[key] === 'string') {
       obj[key] = escapeOne(obj[key])
     } else if (typeof obj[key] === 'object') {
-      for (var i in obj[key]) {
+      for (const i in obj[key]) {
         obj[key][i] = escapeOne(obj[key][i])
       }
     }

@@ -1,7 +1,7 @@
-var express = require('express')
-  , mongoose = require('mongoose')
-  , routes = require(__dirname + '/routes')
-  , app = express()
+const express = require('express')
+const mongoose = require('mongoose')
+const routes = require(__dirname + '/routes')
+const app = express()
 
 routes.addRoutes(app)
 
@@ -10,7 +10,7 @@ mongoose.connect(
   process.env.CONN,
   {useNewUrlParser: true, useUnifiedTopology: true},
   function () {
-    var server = app.listen(process.env.PORT, function () {
+    const server = app.listen(process.env.PORT, function () {
       console.log('listening on http://localhost:%s', server.address().port)
     }
   )

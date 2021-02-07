@@ -1,10 +1,10 @@
-var app = angular.module('ngApp', [])
+const app = angular.module('ngApp', [])
 
 app.factory('DictionarySvc', function($q, $http) {
   function getFromServer(apiPath) {
     // apiPath must always include trailing forward slash
     return function (msg) {
-      var dfd = $q.defer()
+      const dfd = $q.defer()
       $http.get(apiPath + msg).then(function (result) {
         dfd.resolve(result.data)
       })
@@ -16,8 +16,8 @@ app.factory('DictionarySvc', function($q, $http) {
     if (lang !== 'english') {
       return function (a, b) {
         // use length of trad string for chinese and pinyin
-        var aLength = a.trad.length
-          , bLength = b.trad.length
+        const aLength = a.trad.length
+        const bLength = b.trad.length
         if (aLength < bLength) {
           return -1
         } else if (aLength > bLength) {
@@ -27,12 +27,12 @@ app.factory('DictionarySvc', function($q, $http) {
         }
       }
     } else { // lang === 'english'
-      for (var i = 0; i < data.length; ++i) {
+      const regExTerm = new RegExp(term, 'i')
+      for (let i = 0; i < data.length; ++i) {
         // find (first) cell in array of English results containing search term
-        for (var j = 0; j < data[i].english.length; ++j) {
-          if (data[i].english[j].search(new RegExp(term, 'i')) > -1) {
-            break
-          }
+        let j = 0
+        while (j < data[i].english.length && data[i].english[j].search(regExTerm) < 0) {
+          ++j
         }
         // current j gives index of cell containing term (falls through to array length)
         data[i].englishSearchLength = data[i].english[j].split(' ').length
@@ -51,10 +51,9 @@ app.factory('DictionarySvc', function($q, $http) {
   }
 
   function search(lang, term, query) {
-    var dfd = $q.defer()
+    const dfd = $q.defer()
     $http.get('/api/search/' + lang + '/' + term + query).then(function (result) {
-      var sortMethod = getSortMethod(result.data, lang, term)
-      dfd.resolve(result.data.sort(sortMethod))
+      dfd.resolve(result.data.sort(getSortMethod(result.data, lang, term)))
     })
     return dfd.promise
   }
@@ -79,29 +78,24 @@ app.controller('EntryCtrl', function ($scope, DictionarySvc) {
   }
 
   $scope.search = function () {
-    if (!$scope.searchTerm) return
+    if (!$scope.searchTerm) {
+      return
+    }
 
-    var queries = []
-      , query = ''
-      , i = 0
     $scope.numRandom = ''
-
+    
+    const queries = []
     if ($scope.wholeWord && $scope.searchLang === 'english') {
-      queries[i] = 'wholeword=true'
-      ++i
+      queries.push('wholeword=true')
     }
     if ($scope.exactMatch) {
-      queries[i] = 'exactmatch=true'
-      ++i
+      queries.push('exactmatch=true')
     }
-    if (i !== 0) {
-      query = '?' + queries.join('&')
-    }
-
-    DictionarySvc.search( $scope.searchLang
-                        , $scope.searchTerm
-                        , query)
-                 .then(saveToEntries)
+    DictionarySvc.search(
+        $scope.searchLang,
+        $scope.searchTerm,
+        queries.length === 0 ? '' : '?' + queries.join('&'))
+      .then(saveToEntries)
   }
 
   $scope.showAltEnglish = function(entry) {

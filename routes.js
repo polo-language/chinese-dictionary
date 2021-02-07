@@ -1,8 +1,8 @@
-var express = require('express')
-  , DictEntry = require(__dirname + '/models/dictionaryModel').DictEntry
+const express = require('express')
+const DictEntry = require(__dirname + '/models/dictionaryModel').DictEntry
 
 module.exports = {
-  addRoutes: addRoutes
+  addRoutes,
 }
 
 function addRoutes(app) {
@@ -21,7 +21,7 @@ function addRoutes(app) {
 
 //// functions
 function getRandom(req, res, next) {
-  var count = req.params.count
+  let count = req.params.count
   if (count < 1) {
     count = 1
   } else if (10000 < count) {
@@ -32,7 +32,7 @@ function getRandom(req, res, next) {
 }
 
 function getLangTerm(req, res, next) {
-  var done = queryReturned.bind(this, req, next)
+  const done = queryReturned.bind(this, req, next)
   switch (req.params.lang) {
   case 'english':
     DictEntry.searchEnglish(req.params.term, req.query.wholeword, req.query.exactmatch, done)
