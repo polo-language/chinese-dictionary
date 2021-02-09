@@ -1,5 +1,3 @@
 node_modules/
-res/
-client/vendor/
-db/data/
-.env
+/client/vendor
+/admin/db
