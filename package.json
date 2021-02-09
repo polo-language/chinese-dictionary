@@ -17,10 +17,10 @@
     "async-each": "^1.0.3",
     "bower": "^1.8.8",
     "express": "^4.17.1",
-    "pug": "^3.0.0",
-    "mongodb": "^3.6.4",
+    "mongodb": "^3.6.3",
     "mongodb-uri": "^0.9.7",
-    "mongoose": "^5.11.15"
+    "mongoose": "^5.11.15",
+    "pug": "^3.0.0"
   },
   "engines": {
     "node": "^15.3.0",
