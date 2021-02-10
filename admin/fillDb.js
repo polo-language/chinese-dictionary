@@ -1,58 +1,65 @@
-const MongoClient = require('mongodb')
+const MongoClient = require('mongodb').MongoClient
 const mongodbUri = require('mongodb-uri')
 const fs = require('fs')
 
-if (!process.env.CONN) {
-  printUsage()
-  throw new Error("Missing or empty connection string.")
+const COLLECTION_NAME = 'DictEntries'
+
+main().catch(console.error)
+
+async function main() {
+  const [connectionString, dbName, inputPath, dropCollection] = parseArgs()
+  const mongoClient = new MongoClient(connectionString, {useUnifiedTopology: true})
+  try {
+    const [_, entries] = await Promise.all([mongoClient.connect(), parseJsonFile(inputPath)])
+    const db = mongoClient.db(dbName)
+    if (dropCollection) {
+      console.log(`Dropping collection ${COLLECTION_NAME}`)
+      await db.dropCollection(COLLECTION_NAME)
+    }
+    await fillCollection(db, entries)
+  } finally {
+    console.log('Closing client.')
+    mongoClient.close()
+  }
 }
 
-connect(mongodbUri.format(mongodbUri.parse(process.env.CONN)), getEntries())
+function parseArgs() {
+  const connectionStringRaw = process.env.CONN
+  if (!connectionStringRaw) {
+    printUsage()
+    throw new Error("Missing or empty connection string.")
+  }
+  const connectionString = mongodbUri.format(mongodbUri.parse(connectionStringRaw))
+  
+  const dbName = process.argv[2]
+  const inputPath = process.argv[3]
+  if (!dbName || !inputPath) {
+    printUsage()
+    throw new Error("Missing database name or input file path.")
+  }
+  const dropCollection = Boolean(process.argv[4])
+  return [connectionString, dbName, inputPath, dropCollection]
+}
 
 function printUsage() {
-  console.error(
+  console.log(
     'Usage:\n'+
-    'node db/fillDb <username> <password>\n'+
-    'Store the database connection string in the CONN environment variable.\n'+
-    'the database name must be included in the connection string.'
+    'node admin/fillDb <db-name> <input.json>\n'+
+    'Store the database connection string in the CONN environment variable.\n'
   )
 }
 
-function getEntries() {
-  return JSON.parse(fs.readFileSync(
-      __dirname + '/../res/dict-json/dict_all.json',
-      { encoding: 'utf8' }
-  ))
+async function parseJsonFile(inputPath) {
+  const buffer = await fs.promises.readFile(inputPath, { encoding: 'utf8' })
+  return JSON.parse(buffer)
 }
 
-function connect(uri, entries) {
-  MongoClient.connect(uri, function (err, db) {
-    if (err) return console.error(err);
-    fillCollection(db, entries)
-    // setTimeout(function () { db.close(); }, 30000)
-  })
-}
-
-function fillCollection(db, entries) {
-  let n = 0
-  db.dropCollection('DictEntries')
-  db.createCollection('DictEntries', function (err, collection) {
-    for (const trad in entries) {
-      const entry = entries[trad]
-      entry.key = n
-      entry.trad = trad
-      addObject(collection, entry)
-      ++n
-    }
-  })
-}
-
-function addObject(collection, obj) {
-  collection.insert(obj, function (err, result) {
-    if (err) {
-      console.error('Error: ' + err)
-    } else {
-      console.log('Inserted: ' + result)
-    }
-  })
+async function fillCollection(db, entries) {
+  const collection = db.collection(COLLECTION_NAME)
+  console.log(`Writing to collection ${collection.dbName}.${COLLECTION_NAME}...`)
+  for (let i = 0; i < entries.length; i += 100) {
+    const end = Math.min(i + 100, entries.length)
+    console.log(`Inserting entries ${i} (${entries[i].trad}) - ${end-1} (${entries[end-1].trad})`)
+    await collection.insertMany(entries.slice(i, end))
+  }
 }
