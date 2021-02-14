@@ -1,8 +1,15 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const mongodbUri = require('mongodb-uri')
-const queries = require('./storage/queries')
+import express from 'express'
+import mongoose from 'mongoose'
+import mongodbUri from 'mongodb-uri'
+import * as queries  from './storage/queries.js'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express()
+const connectionString = process.env.CONN
 const port = process.env.PORT
 
 checkArgs()
@@ -10,10 +17,10 @@ addRoutes(app)
 start()
 
 function checkArgs() {
-  if (!process.env.CONN) {
+  if (!connectionString) {
     throw new Error("Missing or empty connection string.")
   }
-  if (!process.env.PORT) {
+  if (!port) {
     console.warn('Missing or empty port. Using a random free port.')
   }
 }
@@ -34,7 +41,7 @@ function addRoutes(app) {
 
 function start() {
   mongoose.connect(
-      mongodbUri.formatMongoose(process.env.CONN),
+      mongodbUri.formatMongoose(connectionString),
       {useNewUrlParser: true, useUnifiedTopology: true}
   ).then(() => {
     const server = app.listen(port, function () {
@@ -44,9 +51,11 @@ function start() {
 }
 
 function sendResults(req, res) {
-    if (req.err) {
+  if (req.err) {
+    console.log(req.err)
     res.sendStatus(204)
     // TODO: notify of error
+  } else {
+    res.send(req.result)
   }
-  res.send(req.result)
 }

@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const each = require('async-each')
-const collectionName = 'DictEntries'
+import mongoose from 'mongoose'
+
+const COLLECTION_NAME = 'DictEntries'
 
 const dictSchema = new mongoose.Schema({
   key: Number,
@@ -15,21 +15,19 @@ dictSchema.statics.searchEnglish = searchEnglish
 dictSchema.statics.searchChinese = searchChinese
 dictSchema.statics.searchPinyin = searchPinyin
 
-const DictEntry = mongoose.model('DictEntry', dictSchema, collectionName)
+export const DictEntry =
+    mongoose.model('DictEntry', dictSchema, COLLECTION_NAME)
 
-module.exports = {
-  DictEntry,
-}
-
-function getRandom(count, callback) {
-  const model = this
-  model.find().estimatedDocumentCount(function (err, total) {
-    if (err) return callback(err)
-    each(
-        getRandomKeys(count, total),
-        (oneKey, cb) => model.findOne({ key: oneKey }, cb),
-        callback)
-  })
+/**
+ * @param {number} count
+ * @return {Promise<Array>}
+ */
+function getRandom(count) {
+  return this.find()
+      .estimatedDocumentCount()
+      .then(total => Promise.allSettled(
+          getRandomKeys(count, total).map(oneKey =>
+              this.findOne({ key: oneKey }).exec())))
 }
 
 function getRandomKeys(count, total) {
@@ -46,32 +44,34 @@ function randomInteger(min, max) {
   return Math.floor(minInt + (maxInt - minInt) * Math.random())
 }
 
-function searchEnglish(term, wholeword, exactmatch, cb) {
-  let reg
-  if (wholeword === 'true') {
-    reg = new RegExp('(^|\\s)' + escapeRegExp(term) + '(\\s|$)', 'i')
-  } else if (exactmatch === 'true') {
-    reg = new RegExp('(^)' + escapeRegExp(term) + '($)', 'i')
-  } else {
-    reg = new RegExp(escapeRegExp(term), 'i')
-  }
-  this.find({ english: reg })
+function searchEnglish(term, wholeword, exactmatch) {
+  return this.find({ english: englishRegexFor(term, wholeword, exactmatch) })
       .sort({ english: 'asc' })
-      .exec(cb)
+      .exec()
 }
 
-function searchChinese(term, cb) {
+function englishRegexFor(term, wholeword, exactmatch) {
+  if (wholeword === 'true') {
+    return new RegExp('(^|\\s)' + escapeRegExp(term) + '(\\s|$)', 'i')
+  } else if (exactmatch === 'true') {
+    return new RegExp('(^)' + escapeRegExp(term) + '($)', 'i')
+  } else {
+    return new RegExp(escapeRegExp(term), 'i')
+  }
+}
+
+function searchChinese(term) {
   const reg = new RegExp(escapeRegExp(term))
-  this.find().or([{ trad: reg }, { simp: reg }])
+  return this.find().or([{ trad: reg }, { simp: reg }])
       .sort({ trad: 'asc' })
-      .exec(cb)
+      .exec()
 }
 
-function searchPinyin(term, cb) {
+function searchPinyin(term) {
   const reg = new RegExp(escapeRegExp(term), 'i')
-  this.find({ pinyin: reg })
+  return this.find({ pinyin: reg })
       .sort({ pinyin: 'asc' })
-      .exec(cb)
+      .exec()
 }
 
 function escapeRegExp(string){

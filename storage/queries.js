@@ -1,6 +1,6 @@
-const DictEntry = require('./dictionaryModel').DictEntry
+import { DictEntry } from './dictionaryModel.js'
 
-module.exports = {
+export {
   getRandom,
   getLangTerm,
 }
@@ -12,32 +12,29 @@ function getRandom(req, res, next) {
   } else if (10000 < count) {
     count = 10000
   }
-
-  DictEntry.getRandom(count, requestWrappingCallback(req, next))
+  DictEntry.getRandom(count)
+  .then(array => {
+    req.result = array.filter(v => v.value).map(v => v.value)
+    // TODO: Log any unsuccessful values.
+  })
+  .catch(err => req.err = err)
+  .finally(() => next())
 }
 
 function getLangTerm(req, res, next) {
-  const done = requestWrappingCallback(req, next)
-  switch (req.params.lang) {
-  case 'english':
-    DictEntry.searchEnglish(req.params.term, req.query.wholeword, req.query.exactmatch, done)
-    break;
-  case 'chinese': // TODO: wholeword here
-    DictEntry.searchChinese(req.params.term, done)
-    break;
-  case 'pinyin':
-    DictEntry.searchPinyin(req.params.term, done)
-    break;
-  default:
-    done(new Error('Invalid language in search parameter.'), undefined)
-  }
-
-}
-
-function requestWrappingCallback(req, next) {
-  return (err, result) => {
-    req.err = err
-    req.result = result
-    next()
-  }
+  new Promise((resolve, reject) => {
+    if (req.params.lang === 'english') {
+      resolve(DictEntry.searchEnglish(
+          req.params.term, req.query.wholeword, req.query.exactmatch))
+    } else if (req.params.lang === 'chinese') { // TODO: wholeword here
+      resolve(DictEntry.searchChinese(req.params.term))
+    } else if (req.params.lang === 'pinyin') {
+      resolve(DictEntry.searchPinyin(req.params.term))
+    } else {
+      reject(`Invalid search language '${req.params.lang}'`)
+    }
+  })
+  .then(val => req.result = val)
+  .catch(err => req.err = err)
+  .finally(() => next())
 }

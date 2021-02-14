@@ -1,11 +1,14 @@
-const mongoose = require('mongoose')
-const syllableSchema = new mongoose.Schema({ syllable: String })
-const collectionName = 'pinyin_syllable'
+import mongoose from 'mongoose'
 
-syllableSchema.statics.getSyllables = function (cb) {
+const COLLECTION_NAME = 'pinyin_syllable'
+
+const syllableSchema = new mongoose.Schema({ syllable: String })
+
+syllableSchema.statics.getSyllables = function () {
   this.find()
       .sort({syllable: 'asc'})
-      .exec(cb)
+      .exec()
 }
 
-module.exports.PinyinSyllable = mongoose.model('pinyin_syllable', syllableSchema, collectionName)
+export const PinyinSyllable =
+    mongoose.model('pinyin_syllable', syllableSchema, COLLECTION_NAME)

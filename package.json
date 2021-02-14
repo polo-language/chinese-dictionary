@@ -13,8 +13,8 @@
   },
   "author": "Angelo Polo <language.devel@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
-    "async-each": "^1.0.3",
     "bower": "^1.8.8",
     "express": "^4.17.1",
     "mongodb": "^3.6.3",
