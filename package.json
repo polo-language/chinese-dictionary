@@ -2,8 +2,9 @@
   "name": "chinese-dictionary",
   "version": "0.1.2",
   "description": "Chinese dictionary: traditional, simplified, and English served in an Angular web app. Uses CC-CEDICT data.",
+  "private": true,
   "scripts": {
-    "start": "node server"
+    "start": "node src/server"
   },
   "repository": {
     "type": "git",
