@@ -2,9 +2,9 @@ doctype html
 html(lang="en")
     head
         title Chinese Dictionary
-        link(rel="stylesheet" href="/vendor/components-font-awesome/css/fontawesome.min.css")
-        link(rel="stylesheet" href="/vendor/components-font-awesome/css/solid.css")
-        link(rel="stylesheet" href="/vendor/pure/pure-min.css")
+        link(rel="stylesheet" href="/components-font-awesome/css/fontawesome.min.css")
+        link(rel="stylesheet" href="/components-font-awesome/css/solid.css")
+        link(rel="stylesheet" href="/purecss/build/pure-min.css")
         link(rel="stylesheet" href="/css/app.css")
 
     body(ng-app="ngApp")
@@ -61,5 +61,5 @@ html(lang="en")
                                     div.altEnglish(ng-repeat="oneEnglish in entry.english.slice(1)" ng-if="entry.showAltEnglish") {{oneEnglish}}
                                 //- ul.list-group.inner.list-unstyled(ng-if="entry.showAltEnglish")
         
-        script(src="/vendor/angular/angular.min.js")
+        script(src="/angular/angular.min.js")
         script(src="/js/app.js")

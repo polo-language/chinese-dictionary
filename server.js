@@ -30,6 +30,7 @@ function addRoutes(app) {
   app.set('views', __dirname + '/views')
 
   app.use(express.static(__dirname + '/client'))
+  app.use(express.static(__dirname + '/node_modules'))
 
   app.get('/', function (req, res) {
     res.render('index')
