@@ -1,8 +1,18 @@
-import mongoose from 'mongoose'
+import mongoose, { Document, Model } from 'mongoose'
+const { Schema }  = mongoose
 
 const COLLECTION_NAME = 'DictEntries'
 
-const dictSchema = new mongoose.Schema({
+export interface DictionaryDoc extends Document {
+  key: Number,
+  trad: String,
+  simp: String,
+  pinyin: String,
+  english: [String],
+  showingAltEnglish: { type: Boolean, default: false }
+}
+
+const dictSchema = new Schema<DictionaryDoc>({
   key: Number,
   trad: String,
   simp: String,
@@ -15,65 +25,92 @@ dictSchema.statics.searchEnglish = searchEnglish
 dictSchema.statics.searchChinese = searchChinese
 dictSchema.statics.searchPinyin = searchPinyin
 
-export const DictEntry =
-    mongoose.model('DictEntry', dictSchema, COLLECTION_NAME)
+interface DictionaryModel extends Model<DictionaryDoc> {
+  getRandom(this: Model<DictionaryDoc>, count: number) : Promise<DictionaryDoc[]>
+  searchEnglish(
+      this: Model<DictionaryDoc>,
+      term: string,
+      wholeword: boolean,
+      exactmatch: boolean)
+          : Promise<DictionaryDoc[]>
+  searchChinese(this: Model<DictionaryDoc>, term: string): Promise<DictionaryDoc[]>
+  searchPinyin(this: Model<DictionaryDoc>, term: string): Promise<DictionaryDoc[]>
+}
+
+export const DictEntry = mongoose.model<DictionaryDoc, DictionaryModel>(
+    'DictEntry', dictSchema, COLLECTION_NAME)
 
 /**
  * @param {number} count
  * @return {Promise<Array>}
  */
-function getRandom(count) {
+function getRandom(this: Model<DictionaryDoc>, count: number)
+    : Promise<DictionaryDoc[]> {
   return this.find()
       .estimatedDocumentCount()
       .then(total => Promise.allSettled(
           getRandomKeys(count, total).map(oneKey =>
-              this.findOne({ key: oneKey }).exec())))
+              this.findOne({ key: oneKey }).exec()))
+      )
+      .then(array => {
+        const failed = array.filter(item => item !== null && item.status !== 'fulfilled')
+        if (failed.length > 0) {
+          console.error(`Failed to retrieve ${failed.length} random entries`)
+        }
+        return array.filter(item => item !== null && item.status === 'fulfilled')
+            .map(item => (item as PromiseFulfilledResult<DictionaryDoc>).value)
+      })
 }
 
-function getRandomKeys(count, total) {
-  const keys = new Set()
+function getRandomKeys(count: number, total: number): number[] {
+  const keys = new Set<number>()
   while (keys.size < count) {
     keys.add(randomInteger(0, total))
   }
-  return Array.from(keys)
+  return Array.from<number>(keys)
 }
 
-function randomInteger(min, max) {
+function randomInteger(min: number, max: number): number {
   const minInt = Math.ceil(min)
   const maxInt = Math.floor(max)
   return Math.floor(minInt + (maxInt - minInt) * Math.random())
 }
 
-function searchEnglish(term, wholeword, exactmatch) {
-  return this.find({ english: englishRegexFor(term, wholeword, exactmatch) })
+function searchEnglish(
+      this: Model<DictionaryDoc>,
+      term: string,
+      wholeword: boolean,
+      exactmatch: boolean)
+          : Promise<DictionaryDoc[]> {
+  return this.find({ english: <any>englishRegexFor(term, wholeword, exactmatch) })
       .sort({ english: 'asc' })
       .exec()
 }
 
-function englishRegexFor(term, wholeword, exactmatch) {
-  if (wholeword === 'true') {
+function englishRegexFor(term: string, wholeword: boolean, exactmatch: boolean): RegExp {
+  if (wholeword) {
     return new RegExp('(^|\\s)' + escapeRegExp(term) + '(\\s|$)', 'i')
-  } else if (exactmatch === 'true') {
+  } else if (exactmatch) {
     return new RegExp('(^)' + escapeRegExp(term) + '($)', 'i')
   } else {
     return new RegExp(escapeRegExp(term), 'i')
   }
 }
 
-function searchChinese(term) {
+function searchChinese(this: Model<DictionaryDoc>, term: string): Promise<DictionaryDoc[]> {
   const reg = new RegExp(escapeRegExp(term))
-  return this.find().or([{ trad: reg }, { simp: reg }])
+  return this.find().or([{ trad: <any>reg }, { simp: <any>reg }])
       .sort({ trad: 'asc' })
       .exec()
 }
 
-function searchPinyin(term) {
+function searchPinyin(this: Model<DictionaryDoc>, term: string): Promise<DictionaryDoc[]> {
   const reg = new RegExp(escapeRegExp(term), 'i')
-  return this.find({ pinyin: reg })
+  return this.find({ pinyin: <any>reg })
       .sort({ pinyin: 'asc' })
       .exec()
 }
 
-function escapeRegExp(string){
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function escapeRegExp(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

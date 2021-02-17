@@ -1,17 +1,19 @@
-import express from 'express'
+import express, {Express, Response} from 'express'
+import { Request } from './expressTypes'
 import mongoose from 'mongoose'
 import mongodbUri from 'mongodb-uri'
 import * as queries  from './storage/queries.js'
 import * as http from 'http'
 import { fileURLToPath } from 'url';
 import * as path from 'path';
+import { URLSearchParams } from 'url'
 
 const PATH_TO_ROOT = '..'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const [connectionString, port] = checkArgs()
-const app: express.Express = express()
+const app: Express = express()
 addRoutes(app)
 start(connectionString, port)
 
@@ -27,20 +29,21 @@ function checkArgs(): [string, number] {
   return [connectionString, port ? parseInt(port) : 0]
 }
 
-function addRoutes(app: express.Express) {
+function addRoutes(app: Express) {
+  app.set('query parser', (params: string) => new URLSearchParams(params))
+
   app.set('view engine', 'pug')
   app.set('views', pathFromRoot('src/views'))
 
+  app.use(express.static(pathFromRoot('build/client')))
   app.use(express.static(pathFromRoot('src/client')))
-  app.use(express.static(pathFromRoot('client')))
   app.use(express.static(pathFromRoot('node_modules')))
 
-  app.get('/', function (_req: express.Request, res: express.Response) {
-    res.render('index')
-  })
+  app.get('/', (_req: Request, res: Response) => res.render('index'))
 
-  app.get('/api/random/:count', [queries.getRandom, sendResults])
-  app.get('/api/search/:lang/:term', [queries.getLangTerm, sendResults])
+  // Assert as any see similar: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/43897
+  app.get('/api/random/:count', [<any>queries.getRandom, sendResults])
+  app.get('/api/search/:lang/:term', [<any>queries.getLangTerm, sendResults])
 }
 
 function start(connectionString: string, port: number) {
@@ -67,14 +70,14 @@ function getListenAddress(server: http.Server): string {
   }
 }
 
-function sendResults(req: express.Request, res: express.Response) {
+function sendResults(req: Request, res: Response) {
   if (req.err) {
     console.log(req.err)
     res.sendStatus(204)
     // TODO: notify of error
   } else {
     res.send(req.result)
-    }
+  }
 }
 
 function pathFromRoot(...paths: string[]): string {
