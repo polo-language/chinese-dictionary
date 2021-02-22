@@ -14,7 +14,7 @@ function getRandom(req: Request, _res: Response, next: NextFunction) {
   DictEntry.getRandom(count)
   .then(array => {
     if (array.length === 0) {
-      console.warn(`Zero results for random count ${count}`);
+      console.warn(`Zero results for random count ${count}`)
     }
     return req.result = array
   })
@@ -39,23 +39,24 @@ function parseCount(countParam: string): number {
 
 function getLangTerm(req: Request, _res: Response, next: NextFunction) {
   console.log(`Query language -- lang ${req.params.lang} term '${req.params.term}'`)
+  const exactMatch = stringToBool(getQueryParam(req.query, 'exactmatch'))
   new Promise((resolve: (value: Promise<DictionaryDoc[]>) => void, reject) => {
     if (req.params.lang === 'english') {
       resolve(DictEntry.searchEnglish(
           req.params.term,
           stringToBool(getQueryParam(req.query, 'wholeword')),
-          stringToBool(getQueryParam(req.query, 'exactmatch'))))
-    } else if (req.params.lang === 'chinese') { // TODO: wholeword here
-      resolve(DictEntry.searchChinese(req.params.term))
+          exactMatch))
+    } else if (req.params.lang === 'chinese') {
+      resolve(DictEntry.searchChinese(req.params.term, exactMatch))
     } else if (req.params.lang === 'pinyin') {
-      resolve(DictEntry.searchPinyin(req.params.term))
+      resolve(DictEntry.searchPinyin(req.params.term, exactMatch))
     } else {
       reject(`Invalid search language '${req.params.lang}'`)
     }
   })
   .then((array) => {
     if (array.length === 0) {
-      console.warn(`Zero results for language ${req.params.lang}, term '${req.params.term}'`);
+      console.warn(`Zero results for language ${req.params.lang}, term '${req.params.term}'`)
     }
     return req.result = array
   })

@@ -33,8 +33,10 @@ interface DictionaryModel extends Model<DictionaryDoc> {
       wholeword: boolean,
       exactmatch: boolean)
           : Promise<DictionaryDoc[]>
-  searchChinese(this: Model<DictionaryDoc>, term: string): Promise<DictionaryDoc[]>
-  searchPinyin(this: Model<DictionaryDoc>, term: string): Promise<DictionaryDoc[]>
+  searchChinese(this: Model<DictionaryDoc>, term: string, exactmatch: boolean)
+      : Promise<DictionaryDoc[]>
+  searchPinyin(this: Model<DictionaryDoc>, term: string, exactmatch: boolean)
+      : Promise<DictionaryDoc[]>
 }
 
 export const DictEntry = mongoose.model<DictionaryDoc, DictionaryModel>(
@@ -82,12 +84,12 @@ function searchEnglish(
       wholeword: boolean,
       exactmatch: boolean)
           : Promise<DictionaryDoc[]> {
-  return this.find({ english: <any>englishRegexFor(term, wholeword, exactmatch) })
+  return this.find({ english: <any>newRegexFor(term, wholeword, exactmatch) })
       .sort({ english: 'asc' })
       .exec()
 }
 
-function englishRegexFor(term: string, wholeword: boolean, exactmatch: boolean): RegExp {
+function newRegexFor(term: string, wholeword: boolean, exactmatch: boolean): RegExp {
   if (wholeword) {
     return new RegExp('(^|\\s)' + escapeRegExp(term) + '(\\s|$)', 'i')
   } else if (exactmatch) {
@@ -97,20 +99,21 @@ function englishRegexFor(term: string, wholeword: boolean, exactmatch: boolean):
   }
 }
 
-function searchChinese(this: Model<DictionaryDoc>, term: string): Promise<DictionaryDoc[]> {
-  const reg = new RegExp(escapeRegExp(term))
+function searchChinese(this: Model<DictionaryDoc>, term: string, exactmatch: boolean)
+    : Promise<DictionaryDoc[]> {
+  const reg = newRegexFor(term, false, exactmatch)
   return this.find().or([{ trad: <any>reg }, { simp: <any>reg }])
       .sort({ trad: 'asc' })
       .exec()
 }
 
-function searchPinyin(this: Model<DictionaryDoc>, term: string): Promise<DictionaryDoc[]> {
-  const reg = new RegExp(escapeRegExp(term), 'i')
-  return this.find({ pinyin: <any>reg })
+function searchPinyin(this: Model<DictionaryDoc>, term: string, exactmatch: boolean)
+    : Promise<DictionaryDoc[]> {
+  return this.find({ pinyin: <any>newRegexFor(term, false, exactmatch) })
       .sort({ pinyin: 'asc' })
       .exec()
 }
 
 function escapeRegExp(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }

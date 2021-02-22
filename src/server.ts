@@ -4,13 +4,13 @@ import mongoose from 'mongoose'
 import mongodbUri from 'mongodb-uri'
 import * as queries  from './storage/queries.js'
 import * as http from 'http'
-import { fileURLToPath } from 'url';
-import * as path from 'path';
+import { fileURLToPath } from 'url'
+import * as path from 'path'
 import { URLSearchParams } from 'url'
 
 const PATH_TO_ROOT = '..'
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const [connectionString, port] = checkArgs()
 const app: Express = express()

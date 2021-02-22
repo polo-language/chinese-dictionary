@@ -29,7 +29,7 @@ rl.on('line', function (line) {
     isFirst = false
     json += JSON.stringify(lineObj)
   }
-});
+})
 
 rl.on('close', function () {
   json += '\n]\n'
@@ -40,7 +40,7 @@ rl.on('close', function () {
       console.log(`Finished writing JSON to ${outFilePath}`)
     }
   })
-});
+})
 
 function ignoreLine(line) {
   return line[0] === '#'
