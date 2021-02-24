@@ -1,6 +1,7 @@
 import { Response, NextFunction } from 'express'
 import { Request } from '../expressTypes'
-import { DictEntry, DictionaryDoc } from './dictionaryModel.js'
+import { DictEntry } from './dictionaryModel.js'
+import { DictionaryDoc } from '../../common/dictionary-types'
 import { URLSearchParams } from 'url'
 
 export {

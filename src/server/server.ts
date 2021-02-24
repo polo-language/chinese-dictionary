@@ -1,14 +1,13 @@
 import express, {Express, Response} from 'express'
-import { Request } from './expressTypes'
+import { Request } from './expressTypes.js'
 import mongoose from 'mongoose'
 import mongodbUri from 'mongodb-uri'
 import * as queries  from './storage/queries.js'
 import * as http from 'http'
-import { fileURLToPath } from 'url'
 import * as path from 'path'
-import { URLSearchParams } from 'url'
+import { fileURLToPath, URLSearchParams } from 'url'
 
-const PATH_TO_ROOT = '..'
+const PATH_TO_ROOT = '../..'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 

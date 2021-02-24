@@ -33,23 +33,23 @@ angular.module('ngApp').controller('EntryCtrl', function ($scope, DictionarySvc)
       .then(saveToEntries)
   }
 
-  $scope.showAltEnglish = function(entry) {
-    entry.showAltEnglish = !entry.showAltEnglish
+  $scope.showAltEnglish = function(doc: any /*DictionaryDoc*/) {
+    doc.showAltEnglish = !doc.showAltEnglish
   }
 
-  $scope.exactMatchSync = function (clickEvent) {
-    if (clickEvent.target.checked) {
+  $scope.exactMatchSync = function (clickEvent: JQueryEventObject) {
+    if ((<HTMLInputElement>clickEvent.target).checked) {
       $scope.wholeWord = false
     }
   }
 
-  $scope.wholeWordSync = function (clickEvent) {
-    if (clickEvent.target.checked) {
+  $scope.wholeWordSync = function (clickEvent: JQueryEventObject) {
+    if ((<HTMLInputElement>clickEvent.target).checked) {
       $scope.exactMatch = false
     }
   }
   
-  function saveToEntries(newEntries) {
+  function saveToEntries(newEntries: any /*DictionaryDoc*/) {
     $scope.entries = newEntries
   }
 

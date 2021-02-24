@@ -1,16 +1,8 @@
-import mongoose, { Document, Model } from 'mongoose'
+import { DictionaryDoc } from '../../common/dictionary-types'
+import mongoose, { Model } from 'mongoose'
 const { Schema }  = mongoose
 
 const COLLECTION_NAME = 'DictEntries'
-
-export interface DictionaryDoc extends Document {
-  key: Number,
-  trad: String,
-  simp: String,
-  pinyin: String,
-  english: [String],
-  showingAltEnglish: { type: Boolean, default: false }
-}
 
 const dictSchema = new Schema<DictionaryDoc>({
   key: Number,
@@ -18,7 +10,7 @@ const dictSchema = new Schema<DictionaryDoc>({
   simp: String,
   pinyin: String,
   english: [String],
-  showingAltEnglish: { type: Boolean, default: false }
+  showAltEnglish: { type: Boolean, default: false }
 })
 dictSchema.statics.getRandom = getRandom
 dictSchema.statics.searchEnglish = searchEnglish
@@ -87,6 +79,11 @@ function searchEnglish(
   return this.find({ english: <any>newRegexFor(term, wholeword, exactmatch) })
       .sort({ english: 'asc' })
       .exec()
+      .then(docs => {
+        setSortRankingsEnglish(docs, term)
+        sort(docs)
+        return docs
+      })
 }
 
 function newRegexFor(term: string, wholeword: boolean, exactmatch: boolean): RegExp {
@@ -105,6 +102,11 @@ function searchChinese(this: Model<DictionaryDoc>, term: string, exactmatch: boo
   return this.find().or([{ trad: <any>reg }, { simp: <any>reg }])
       .sort({ trad: 'asc' })
       .exec()
+      .then(docs => {
+        setSortRankingsOther(docs)
+        sort(docs)
+        return docs
+      })
 }
 
 function searchPinyin(this: Model<DictionaryDoc>, term: string, exactmatch: boolean)
@@ -112,8 +114,39 @@ function searchPinyin(this: Model<DictionaryDoc>, term: string, exactmatch: bool
   return this.find({ pinyin: <any>newRegexFor(term, false, exactmatch) })
       .sort({ pinyin: 'asc' })
       .exec()
+      .then(docs => {
+        setSortRankingsOther(docs)
+        sort(docs)
+        return docs
+      })
 }
 
 function escapeRegExp(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function sort(docs: DictionaryDoc[]) {
+  docs.sort((a, b) => a.sortRank! - b.sortRank!)
+}
+
+// Modifies docs
+function setSortRankingsEnglish(docs: DictionaryDoc[], term: string) {
+  const regExTerm = new RegExp(term, 'i')
+  for (const doc of docs) {
+    // Find (first) cell in array of English results containing search term
+    let j = 0
+    while (j < doc.english.length && doc.english[j].search(regExTerm) < 0) {
+      ++j
+    }
+    // Current j gives index of cell containing term (falls through to array length)
+    doc.sortRank = doc.english[j].split(' ').length
+  }
+}
+
+// Modifies docs
+// Use length of traditional Chinese
+function setSortRankingsOther(docs: DictionaryDoc[]) {
+  for (const doc of docs) {
+    doc.sortRank = doc.trad.length
+  }
 }
