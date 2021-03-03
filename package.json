@@ -22,7 +22,7 @@
     "mongodb": "^3.6.3",
     "mongodb-uri": "^0.9.7",
     "mongoose": "^5.11.15",
-    "pug": "^3.0.0",
+    "pug": "^3.0.1",
     "purecss": "^2.0.0"
   },
   "engines": {
